@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [FlurryAPI logEvent:@"EditSite"];
 	appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
 	blogIndex = [[BlogDataManager sharedDataManager] indexForBlogid:blogID url:url];

@@ -2121,6 +2121,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = (
 					"-weak_library",
 					/usr/lib/libSystem.B.dylib,
