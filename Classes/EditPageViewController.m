@@ -273,6 +273,9 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
 	selectedSection = nil;
 	[textField resignFirstResponder];
+    if ([textField.text isEqualToString:@"#%#"]) {
+        [NSException raise:@"Test exception" format:@"Nothing bad, actually"];
+    }
 	[self refreshPage];
 	[self refreshTable];
 }
