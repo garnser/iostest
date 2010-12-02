@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [FlurryAPI logEvent:@"EditPage"];
 		
 	appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
 	pageDetailView = (PageViewController *)self.tabBarController.parentViewController;
