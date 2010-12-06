@@ -225,6 +225,7 @@
 }
 
 - (IBAction)cancelView:(id)sender {
+    [FlurryAPI logEvent:@"Post#cancelView"];
     if (!hasChanges) {
         [self stopTimer];
         [mediaViewController cancelPendingUpload:self];
@@ -246,10 +247,13 @@
 }
 
 - (IBAction)saveAction:(id)sender {
-	if(isPublishing == NO)
+	if(isPublishing == NO) {
+        [FlurryAPI logEvent:@"Post#saveAction(save)"];
 		spinner.progressMessage.text = @"Saving...";
-	else
+	} else {
+        [FlurryAPI logEvent:@"Post#saveAction(publish)"];
 		spinner.progressMessage.text = @"Publishing...";
+    }
 	
 	[self.postDetailEditController refreshCurrentPostForUI];
 	
@@ -722,6 +726,7 @@
 }
 
 - (void)publish:(id)sender {
+    [FlurryAPI logEvent:@"Post#publish"];
 	isPublishing = YES;
 	
 	if(post.isLocalDraft == [NSNumber numberWithInt:1]) {
