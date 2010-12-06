@@ -232,6 +232,7 @@
 		[self dismissEditView];
         return;
     }
+    [FlurryAPI logEvent:@"Post#cancelView(actionSheet)"];
 	[postSettingsController endEditingAction:nil];
 	[postDetailEditController endEditingAction:nil];
 
@@ -556,6 +557,7 @@
 }
 
 - (void)saveAsDraft:(BOOL)andDiscard {
+    [FlurryAPI logEvent:@"Post#actionSheet_saveAsDraft"];
 	hasSaved = YES;
 	
 	if((post != nil) && (appDelegate.postID != nil))
@@ -590,6 +592,7 @@
 }
 
 - (void)discard {
+    [FlurryAPI logEvent:@"Post#actionSheet_discard"];
     hasChanges = NO;
 	[self refreshButtons];
 	[postDetailEditController clearUnsavedPost];
@@ -600,6 +603,7 @@
 }
 
 - (void)cancel {
+    [FlurryAPI logEvent:@"Post#actionSheet_cancel"];
     hasChanges = YES;
 
     if ([[leftView title] isEqualToString:@"Posts"])
