@@ -30,23 +30,6 @@ NSString *CrashFilePath() {
     return [documentsDirectory stringByAppendingPathComponent:@"crash_data.txt"];
 }
 
-NSUncaughtExceptionHandler *defaultExceptionHandler;
-void uncaughtExceptionHandler(NSException *exception) {
-    NSArray *backtrace = [exception callStackSymbols];
-    NSString *platform = [[UIDevice currentDevice] platform];
-    NSString *version = [[UIDevice currentDevice] systemVersion];
-    NSString *message = [NSString stringWithFormat:@"device: %@. os: %@. backtrace:\n%@",
-                         platform,
-                         version,
-                         backtrace];
-    WPFLog(@"Logging error (%@|%@): %@\n%@", platform, version, [exception reason], backtrace);
-
-    NSString *ourCrash = [NSString stringWithFormat:@"Logging error (%@|%@): %@\n%@", platform, version, [exception reason], backtrace];
-    [ourCrash writeToFile:CrashFilePath() atomically:NO];
-
-	defaultExceptionHandler(exception);
-}
-
 @implementation WordPressAppDelegate
 
 static WordPressAppDelegate *wordPressApp = NULL;
@@ -263,9 +246,6 @@ static WordPressAppDelegate *wordPressApp = NULL;
 	// Enable the Crash Reporter
 	if (![crashReporter enableCrashReporterAndReturnError: &error])
 		NSLog(@"Warning: Could not enable crash reporter: %@", error);
-	
-//    defaultExceptionHandler = NSGetUncaughtExceptionHandler();
-//	NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 	
 	[blogsViewController release];
 	[window makeKeyAndVisible];
