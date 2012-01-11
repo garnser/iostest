@@ -257,6 +257,17 @@ static WordPressAppDelegate *wordPressApp = NULL;
 										 UIRemoteNotificationTypeAlert)];*/
 }
 
+-(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if (url && [url isKindOfClass:[NSURL class]]) {
+        NSString *URLString = [url absoluteString];
+        NSLog(@"Application launched with URL: %@", URLString);
+        
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 - (void)handleCrashReport {
 	PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
 	NSData *crashData;
