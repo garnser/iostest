@@ -123,6 +123,20 @@
     return result;
 }
 
+
+- (NSString *)blogLoginURL {
+    return [self.xmlrpc stringByReplacingOccurrencesOfRegex:@"/xmlrpc.php$" withString:@"/wp-login.php"];
+    /*
+     i have used the blogURL and worked fine, but the xmlrpc url should be a better choice since it is usually on https.
+     
+     if(![wpLoginURL hasPrefix:@"http"])
+     wpLoginURL = [NSString stringWithFormat:@"http://%@/%@", postDetailViewController.apost.blog.url, @"wp-login.php"];
+     else 
+     wpLoginURL = [NSString stringWithFormat:@"%@/%@", postDetailViewController.apost.blog.url, @"wp-login.php"];
+     
+     */
+}
+
 -(NSArray *)sortedCategories {
 	NSSortDescriptor *sortNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"categoryName" 
 																		ascending:YES 
@@ -158,8 +172,8 @@
 - (NSArray *)syncedPostsWithEntityName:(NSString *)entityName {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:entityName inManagedObjectContext:[self managedObjectContext]]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(remoteStatusNumber = %@) AND (postID != NULL) AND (original == NULL) AND (blog.blogID = %@)",
-							  [NSNumber numberWithInt:AbstractPostRemoteStatusSync], self.blogID]; 
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(remoteStatusNumber = %@) AND (postID != NULL) AND (original == NULL) AND (blog = %@)",
+							  [NSNumber numberWithInt:AbstractPostRemoteStatusSync], self]; 
     [request setPredicate:predicate];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date_created_gmt" ascending:YES];
     [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];

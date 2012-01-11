@@ -299,7 +299,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 	NSString *requestURL;
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 	//views
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@", apiKey, idType, @"views", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@", kStatsEndpointURL, apiKey, idType, @"views", 7, @"" ];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	viewsConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -310,7 +310,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  forKey:@"viewsData"]);
 	
 	//postviews
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", apiKey, idType, @"postviews", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", kStatsEndpointURL, apiKey, idType, @"postviews", 7, @""];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	postViewsConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -321,7 +321,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  forKey:@"postViewsData"]);
 	
 	//referrers
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", apiKey, idType, @"referrers", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", kStatsEndpointURL, apiKey, idType, @"referrers", 7, @""];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	referrersConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -332,7 +332,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  forKey:@"referrersData"]);
 	
 	//search terms
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", apiKey, idType, @"searchterms", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", kStatsEndpointURL, apiKey, idType, @"searchterms", 7, @""];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	searchTermsConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -343,7 +343,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  forKey:@"searchTermsData"]);
 	
 	//clicks
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", apiKey, idType, @"clicks", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@&summarize", kStatsEndpointURL, apiKey, idType, @"clicks", 7, @""];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	clicksConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -358,7 +358,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 	statsRequest = YES;
 	
 	// 7 days
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@", apiKey, idType, @"views", 7, @""];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@", kStatsEndpointURL, apiKey, idType, @"views", 7, @""];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	daysConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -368,7 +368,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  dictionaryWithObject:[NSMutableData data]
 						  forKey:@"chartDaysData"]);
 	// 10 weeks
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@", apiKey, idType, @"views", 10, @"&period=week"];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@", kStatsEndpointURL, apiKey, idType, @"views", 10, @"&period=week"];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	weeksConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	CFDictionaryAddValue(
@@ -378,7 +378,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 						  dictionaryWithObject:[NSMutableData data]
 						  forKey:@"chartWeeksData"]);
 	// 11 months
-	requestURL = [NSString stringWithFormat: @"http://stats.wordpress.com/csv.php?api_key=%@&%@&format=xml&table=%@&days=%d%@", apiKey, idType, @"views", 11, @"&period=month"];	
+	requestURL = [NSString stringWithFormat: @"%@?api_key=%@&%@&format=xml&table=%@&days=%d%@", kStatsEndpointURL, apiKey, idType, @"views", 11, @"&period=month"];	
 	[request setURL:[NSURL URLWithString:requestURL]];
 	[request setValue:@"wp-iphone" forHTTPHeaderField:[appDelegate applicationUserAgent]];
 	monthsConn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -857,7 +857,7 @@ searchTermsConn, clicksConn, daysConn, weeksConn, monthsConn;
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0 && alertView.tag == 1) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://jetpack.me"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: [NSString stringWithFormat: @"%@", kJetPackURL] ]];
     }
 	else if (buttonIndex == 0 && alertView.tag == 2) {
         statsAPIAlertShowing = NO;

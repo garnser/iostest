@@ -32,6 +32,7 @@
 - (void)dataSave;
 - (NSURL *)blavatarURL;
 -(NSArray *)sortedCategories;
+- (NSString *)blogLoginURL;
 
 #pragma mark -
 #pragma mark Synchronization

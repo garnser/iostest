@@ -210,6 +210,8 @@
         [webViewController setUrl:[NSURL URLWithString:dashboardUrl]];
         [webViewController setUsername:self.username];
         [webViewController setPassword:self.password];
+        NSString *wpLoginURL = [self.blog blogLoginURL]; 
+        [webViewController setWpLoginURL:[NSURL URLWithString:wpLoginURL]]; 
         if (DeviceIsPad())
             [self presentModalViewController:webViewController animated:YES];
         else
