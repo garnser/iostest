@@ -28,7 +28,8 @@
 	//uncomment me to add stats back
 	statsTableViewController.blog = self.blog;
 	
-    self.view = tabBarController.view;
+    tabBarController.view.frame = self.view.bounds;
+    [self.view addSubview:tabBarController.view];
 	
 	if ([blog valueForKey:@"blogName"] != nil)
 		self.title = [blog valueForKey:@"blogName"];
