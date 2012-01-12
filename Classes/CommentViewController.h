@@ -36,6 +36,7 @@
     IBOutlet UIBarButtonItem *unapproveButton;
     IBOutlet UIBarButtonItem *spamButton1;
     IBOutlet UIBarButtonItem *spamButton2;
+    IBOutlet UIButton *pendingApproveButton;
 	
 	IBOutlet UIBarButtonItem *deleteButton;
 

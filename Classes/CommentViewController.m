@@ -65,6 +65,7 @@
 	commentBodyWebView.delegate = nil;
     [commentBodyWebView stopLoading];
     [commentBodyWebView release];
+    [pendingApproveButton release];
     [super dealloc];
 }
 
@@ -111,13 +112,15 @@
 	}
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChangedNotification) name:@"kNetworkReachabilityChangedNotification" object:nil];
-    
+        
     if (self.comment) {
         [self showComment:self.comment];
     }
 }
 
 - (void)viewDidUnload {
+    [pendingApproveButton release];
+    pendingApproveButton = nil;
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [segmentedControl release]; segmentedControl = nil;
@@ -574,39 +577,43 @@
     pendingLabelHolder.backgroundColor = PENDING_COMMENT_TABLE_VIEW_CELL_BACKGROUND_COLOR;
     pendingLabel.text = NSLocalizedString(@"Pending Comment", @"");
 
+    [pendingApproveButton setTitle:NSLocalizedString(@"Approve", @"") forState:UIControlStateNormal];
+    [pendingApproveButton setBackgroundColor:PENDING_COMMENT_TABLE_VIEW_CELL_BACKGROUND_COLOR];
+    [pendingApproveButton addTarget:self action:@selector(approveComment:) forControlEvents:UIControlEventTouchUpInside];
+    
 	[labelHolder addSubview:pendingLabelHolder];
     
-	rect = pendingLabelHolder.frame;
-	rect.size.width = [pendingLabelHolder superview].frame.size.width;
-	pendingLabelHolder.frame = rect;
-	
+    rect = pendingLabelHolder.frame;
+    rect.size.width = [pendingLabelHolder superview].frame.size.width;
+    pendingLabelHolder.frame = rect;
+
     rect = gravatarImageView.frame;
     rect.origin.y += pendingLabelHeight;
     gravatarImageView.frame = rect;
-    
+
     rect = commentAuthorLabel.frame;
     rect.origin.y += pendingLabelHeight;
     commentAuthorLabel.frame = rect;
-    
+
     rect = commentAuthorUrlButton.frame;
     rect.origin.y += pendingLabelHeight;
-	commentAuthorUrlButton.frame = rect;
-	
+    commentAuthorUrlButton.frame = rect;
+
     rect = commentAuthorEmailButton.frame;
     rect.origin.y += pendingLabelHeight;
-	commentAuthorEmailButton.frame = rect;
-    
+    commentAuthorEmailButton.frame = rect;
+
     rect = commentPostTitleLabel.frame;
     rect.origin.y += pendingLabelHeight;
     commentPostTitleLabel.frame = rect;
-	
-	rect = commentDateLabel.frame;
+
+    rect = commentDateLabel.frame;
     rect.origin.y += pendingLabelHeight;
     commentDateLabel.frame = rect;
-	
-	rect = commentBodyWebView.frame;
+
+    rect = commentBodyWebView.frame;
     rect.origin.y += pendingLabelHeight;
-	rect.size.height -= pendingLabelHeight;
+    rect.size.height -= pendingLabelHeight;
     commentBodyWebView.frame = rect;
 	
 	[labelHolder sizeToFit];
@@ -744,7 +751,7 @@
 }
 
 - (void)addOrRemoveSegmentedControl {
-	if (DeviceIsPad() && self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight){
+	if ((DeviceIsPad() && self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight){
 		self.navigationItem.rightBarButtonItem = nil;
 	}	
 	else
