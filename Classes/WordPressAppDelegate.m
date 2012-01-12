@@ -22,6 +22,7 @@
 - (void)checkIfStatsShouldRun;
 - (void)runStats;
 - (void)showPasswordAlert;
+- (void)cleanUnusedMediaFileFromTmpDir;
 @end
 
 NSString *CrashFilePath() {
@@ -165,7 +166,14 @@ static WordPressAppDelegate *wordPressApp = NULL;
     }
 	// Stats use core data, so run them after initialization
 	[self checkIfStatsShouldRun];
-	
+
+	// Clean media files asynchronously
+    // dispatch_async feels a bit faster than performSelectorOnBackground:
+    // and we're trying to launch the app as fast as possible
+    dispatch_async(dispatch_get_global_queue(0, 0), ^(void) {
+        [self cleanUnusedMediaFileFromTmpDir];
+    });
+
 	BlogsViewController *blogsViewController = [[BlogsViewController alloc] init];
 	crashReportView = [[CrashReportViewController alloc] initWithNibName:@"CrashReportView" bundle:nil];
 	
@@ -919,6 +927,57 @@ static WordPressAppDelegate *wordPressApp = NULL;
 	NSDate *theDate = [NSDate date];
 	[defaults setObject:theDate forKey:@"statsDate"];
 	[defaults synchronize];
+}
+
+- (void)cleanUnusedMediaFileFromTmpDir {
+    [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	NSMutableArray *mediaToKeep = [NSMutableArray array];
+
+    NSError *error = nil;
+    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] init];
+    [context setUndoManager:nil];
+    [context setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Media" inManagedObjectContext:context]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ANY posts.blog != NULL"];
+    [fetchRequest setPredicate:predicate];
+    NSArray *mediaObjectsToKeep = [context executeFetchRequest:fetchRequest error:&error];
+    if (error != nil) {
+        WPFLog(@"Error cleaning up tmp files: %@", [error localizedDescription]);
+    }
+	//get a references to media files linked in a post
+    NSLog(@"%i media items to check for cleanup", [mediaObjectsToKeep count]);
+	for (Media *media in mediaObjectsToKeep) {
+        [mediaToKeep addObject:media.localURL];
+	}
+
+	//searches for jpg files within the app temp file
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	NSArray *contentsOfDir = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+
+	for (NSString *currentPath in contentsOfDir)
+		if([currentPath isMatchedByRegex:@".jpg$"]) {
+			NSString *filepath = [documentsDirectory stringByAppendingPathComponent:currentPath];
+
+			BOOL keep = NO;
+			//if the file is not referenced in any post we can delete it
+			for (NSString *currentMediaToKeepPath in mediaToKeep) {
+				if([currentMediaToKeepPath isEqualToString:filepath]) {
+					keep = YES;
+					break;
+				}
+			}
+
+			if(keep == NO) {
+				[fileManager removeItemAtPath:filepath error:NULL];
+			}
+		}
+
+	[pool release];
 }
 
 #pragma mark Push Notification delegate

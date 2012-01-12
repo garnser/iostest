@@ -5,7 +5,6 @@
 #import "QuickPhotoUploadProgressController.h"
 
 @interface BlogsViewController (Private)
-- (void) cleanUnusedMediaFileFromTmpDir;
 - (void)setupPhotoButton;
 - (void)setupReader;
 @end
@@ -35,15 +34,6 @@
     self.tableView.dataSource = self;
 	self.tableView.allowsSelectionDuringEditing = YES;
     
-    NSError *error = nil;
-    if (![self.resultsController performFetch:&error]) {
-//        NSLog(@"Error fetching request (Blogs) %@", [error localizedDescription]);
-    } else {
-//        NSLog(@"fetched blogs: %@", [resultsController fetchedObjects]);
-		//Start a check on the media files that should be deleted from disk
-		[self performSelectorInBackground:@selector(cleanUnusedMediaFileFromTmpDir) withObject:nil];
-    }
-
     [self setupPhotoButton];
 	
 	// Check to see if we should prompt about rating in the App Store
@@ -136,12 +126,12 @@
 #pragma mark UITableView Delegate Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[resultsController sections] count];
+    return [[self.resultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = nil;
-    sectionInfo = [[resultsController sections] objectAtIndex:section];
+    sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
@@ -152,7 +142,7 @@
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"BlogCell";
     BlogsTableViewCell *cell = (BlogsTableViewCell *)[aTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    Blog *blog = [resultsController objectAtIndexPath:indexPath];
+    Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
     
     CGRect frame = CGRectMake(8,8,35,35);
     WPAsynchronousImageView* asyncImage = [[[WPAsynchronousImageView alloc]
@@ -195,7 +185,7 @@
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([aTableView cellForRowAtIndexPath:indexPath].editing) {
-        Blog *blog = [resultsController objectAtIndexPath:indexPath];
+        Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
 		
 		EditSiteViewController *editSiteViewController;
 		editSiteViewController = [[EditSiteViewController alloc] initWithNibName:@"EditSiteViewController" bundle:nil];
@@ -218,7 +208,7 @@
         [aTableView setEditing:NO animated:YES];
     }
 	else {	// if ([self canChangeCurrentBlog]) {
-        Blog *blog = [resultsController objectAtIndexPath:indexPath];
+        Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
 		[self showBlog:blog animated:YES];
 
 		//we should keep a reference to the last selected blog
@@ -232,7 +222,7 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
-		Blog *blog = [resultsController objectAtIndexPath:indexPath];
+		Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
 		if([self canChangeBlog:blog]){
 			[aTableView beginUpdates];
 			
@@ -284,7 +274,7 @@
     BOOL wantsReaderButton = NO;
     
     if (!DeviceIsPad()
-        && [[resultsController fetchedObjects] count] > 0) {
+        && [[self.resultsController fetchedObjects] count] > 0) {
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
             || [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
             wantsPhotoButton = YES;
@@ -397,53 +387,6 @@
     [appDelegate setAlertRunning:YES];
 	
     [actionSheet release];
-}
-
-- (void) cleanUnusedMediaFileFromTmpDir {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	NSMutableArray *mediaToKeep = [NSMutableArray array];	
-	//get a references to media files linked in a post
-	for (Blog *blog in [resultsController fetchedObjects]) {
-		NSSet *posts = blog.posts;
-		if (posts && (posts.count > 0)) { 
-			for (AbstractPost *post in posts) {
-				//check for media file
-				NSSet *mediaFiles = post.media;
-				for (Media *media in mediaFiles) {
-					[mediaToKeep addObject:media];
-				}
-				mediaFiles = nil;
-			}
-		}
-		posts = nil;
-	}
-	
-	//searches for jpg files within the app temp file
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndex:0];
-	NSArray *contentsOfDir = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-	
-	for (NSString *currentPath in contentsOfDir)
-		if([currentPath isMatchedByRegex:@".jpg$"]) {
-			NSString *filepath = [documentsDirectory stringByAppendingPathComponent:currentPath];
-			
-			BOOL keep = NO;
-			//if the file is not referenced in any post we can delete it
-			for (Media *currentMediaToKeepPath in mediaToKeep) {
-				if([[currentMediaToKeepPath localURL] isEqualToString:filepath]) {
-					keep = YES;
-					break;
-				}
-			}
-			
-			if(keep == NO) {
-				[fileManager removeItemAtPath:filepath error:NULL];
-			}
-		}
-	
-	[pool release];
 }
 
 - (BOOL)canChangeBlog:(Blog *) blog {
@@ -571,6 +514,12 @@
     [fetchRequest release];
     [sortDescriptor release]; sortDescriptor = nil;
     [sortDescriptors release]; sortDescriptors = nil;
+
+    NSError *error = nil;
+    if (![resultsController performFetch:&error]) {
+        WPFLog(@"Couldn't fetch blogs: %@", [error localizedDescription]);
+        resultsController = nil;
+    }
 
     return resultsController;
 }
