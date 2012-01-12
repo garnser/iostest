@@ -179,7 +179,7 @@
 	} 
 	
 	NSString *conditionalButtonTitle = nil;
-	
+
 	if ([self isApprove]) {
 		conditionalButtonTitle = NSLocalizedString(@"Approve Comment", @"");
 	} else {
@@ -188,7 +188,7 @@
 	
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@""
 															 delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:nil
-													otherButtonTitles: conditionalButtonTitle, NSLocalizedString(@"Mark Comment as Spam", @""), NSLocalizedString(@"Edit Comment", @""),nil];
+													otherButtonTitles: NSLocalizedString(@"Delete Comment", @""), NSLocalizedString(@"Mark Comment as Spam", @""), NSLocalizedString(@"Edit Comment", @""),nil];
 	//otherButtonTitles: conditionalButtonTitle, NSLocalizedString(@"Mark Comment as Spam", @""),nil];
 	
 	actionSheet.tag = 301;
@@ -251,12 +251,8 @@
 	//handle action sheet for approve/spam/edit
     if ([actionSheet tag] == 301) {
         spamButton1.enabled = YES;
-        if (buttonIndex == 0) {  //Approve/Unapprove conditional button was selected
-			if ([self isApprove]) {
-				[self approveComment:nil];
-			} else {
-				[self unApproveComment:nil];
-			}
+        if (buttonIndex == 0) {  //Delete comment was selected
+			[self deleteComment:nil];
         }
 		
         if (buttonIndex == 1) {  //Mark as Spam was selected
@@ -274,7 +270,7 @@
 			//   and load data conditionally
         }
     }
-	
+    
     WordPressAppDelegate *delegate = (WordPressAppDelegate*)[[UIApplication sharedApplication] delegate];
     [delegate setAlertRunning:NO];
 }
@@ -576,10 +572,6 @@
 	float pendingLabelHeight = pendingLabelHolder.frame.size.height;
     pendingLabelHolder.backgroundColor = PENDING_COMMENT_TABLE_VIEW_CELL_BACKGROUND_COLOR;
     pendingLabel.text = NSLocalizedString(@"Pending Comment", @"");
-
-    [pendingApproveButton setTitle:NSLocalizedString(@"Approve", @"") forState:UIControlStateNormal];
-    [pendingApproveButton setBackgroundColor:PENDING_COMMENT_TABLE_VIEW_CELL_BACKGROUND_COLOR];
-    [pendingApproveButton addTarget:self action:@selector(approveComment:) forControlEvents:UIControlEventTouchUpInside];
     
 	[labelHolder addSubview:pendingLabelHolder];
     
@@ -709,6 +701,15 @@
 
     }
 
+    [pendingApproveButton setTarget:self];
+    if ([self isApprove]) {
+        [pendingApproveButton setTitle:NSLocalizedString(@"Approve", @"")];
+        [pendingApproveButton setAction:@selector(approveComment:)];
+	} else {
+        [pendingApproveButton setTitle:NSLocalizedString(@"Unapprove", @"")];
+        [pendingApproveButton setAction:@selector(unApproveComment:)];
+	}
+    
     [segmentedControl setEnabled:[commentsViewController hasPreviousComment] forSegmentAtIndex:0];
     [segmentedControl setEnabled:[commentsViewController hasNextComment] forSegmentAtIndex:1];
 }
