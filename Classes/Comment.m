@@ -144,7 +144,9 @@
         if([[WPDataController sharedInstance] wpEditComment:self]) {
 			//OK
 		    [[WPDataController sharedInstance] updateSingleComment:self];
-			[self save];
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                [self save];
+            });
 			return YES;
 		} 
     } else {
@@ -152,7 +154,9 @@
         if (commentID) {
 			self.commentID = commentID;
 			[[WPDataController sharedInstance] updateSingleComment:self];
-			[self performSelectorOnMainThread:@selector(save) withObject:nil waitUntilDone:YES];
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                [self save];
+            });
 			return YES;
 		}
 	}
@@ -164,7 +168,9 @@
 - (BOOL)moderate {
     if (self.commentID) {
         if([[WPDataController sharedInstance] wpEditComment:self]) {
-			[self save];
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                [self save];
+            });
 			return YES;
 		} 
     } 
@@ -207,8 +213,10 @@
 		self.status = prevStatus;
 		return NO;
 	} else {
-		[[self managedObjectContext] deleteObject:self];
-		[self save];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [[self managedObjectContext] deleteObject:self];
+            [self save];
+        });
 	}
 	
 	return YES;	
@@ -216,8 +224,10 @@
 
 - (BOOL)remove {
     if ([[WPDataController sharedInstance] wpDeleteComment:self]) {
-        [[self managedObjectContext] deleteObject:self];
-		[self save];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [[self managedObjectContext] deleteObject:self];
+            [self save];
+        });
 		return YES;
     } else {
 		return NO;

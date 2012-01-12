@@ -196,7 +196,6 @@
 			[self performSelectorOnMainThread:@selector(didUploadInBackground) withObject:nil waitUntilDone:NO];
         }
     }
-    [self save];
 
     [pool release];
 }
@@ -204,11 +203,13 @@
 - (void)didUploadInBackground {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PostUploaded" object:self];
+    [self save];
 }
 
 - (void)failedUploadInBackground {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PostUploadFailed" object:self];
+    [self save];
 }
 
 - (void)upload {

@@ -100,7 +100,9 @@
             [self performSelectorOnMainThread:@selector(didUploadInBackground) withObject:nil waitUntilDone:NO];
         }
     }
-    [self save];
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [self save];
+    });
 
     [pool release];
 }

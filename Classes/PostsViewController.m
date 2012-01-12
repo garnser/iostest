@@ -344,14 +344,16 @@
     Post *post = [resultsController objectAtIndexPath:indexPath];
 	
     if (![post hasRemote]) {
-        // FIXME: use custom post method
-		[appDelegate.managedObjectContext deleteObject:post];
-		
-        // Commit the change.
-        NSError *error;
-        if (![appDelegate.managedObjectContext save:&error]) {
-			NSLog(@"Severe error when trying to delete local draft. Error: %@", error);
-        }		
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            // FIXME: use custom post method
+            [appDelegate.managedObjectContext deleteObject:post];
+
+            // Commit the change.
+            NSError *error;
+            if (![appDelegate.managedObjectContext save:&error]) {
+                NSLog(@"Severe error when trying to delete local draft. Error: %@", error);
+            }
+        });
     } 
 	else {
         //check for reachability

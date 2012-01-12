@@ -120,7 +120,9 @@
         [media setImage:self.photo withSize:newSize];
     }
     
-    [media save];
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [media save];
+    });
     [media release];
     [postButtonItem setEnabled:YES];
     [pool release];
@@ -165,12 +167,6 @@
 #pragma mark -
 #pragma mark Custom methods
 
-- (void)postInBackground {
-
-    [post save];
-
-}
-
 - (void)post {
     Blog *blog = self.blogSelector.activeBlog;
     if (post == nil) {
@@ -184,7 +180,9 @@
     post.specialType = @"QuickPhoto";
     post.postFormat = @"image";
 
-    [self performSelectorOnMainThread:@selector(postInBackground) withObject:nil waitUntilDone:YES];
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [post save];
+    });
     [self.navigationController popViewControllerAnimated:YES];
     [blogsViewController uploadQuickPhoto: post];
     
