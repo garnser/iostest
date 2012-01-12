@@ -14,7 +14,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "WPWebViewController.h"
 
-@interface StatsTableViewController : UITableViewController <UIAlertViewDelegate, NSXMLParserDelegate, EGORefreshTableHeaderDelegate>{
+@interface StatsTableViewController : UITableViewController <UIAlertViewDelegate, NSXMLParserDelegate, EGORefreshTableHeaderDelegate, NSURLConnectionDelegate>{
 	
     EGORefreshTableHeaderView *_refreshHeaderView;
 	NSMutableArray *viewsData;

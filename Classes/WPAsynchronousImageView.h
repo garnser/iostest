@@ -22,7 +22,7 @@
 @property (nonatomic, assign) BOOL isBlavatar;
 @property (nonatomic, assign) BOOL isWPCOM;
 
-
 - (void)loadImageFromURL:(NSURL *)theUrl;
+- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection;
 
 @end
