@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EGORefreshTableHeaderView.h"
 
-@interface WPReaderViewController : UIViewController<UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate> {
+@interface WPReaderViewController : UIViewController<UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
     BOOL isLoading, needsLogin;
     IBOutlet UIWebView *webView;
     NSTimer *statusTimer;   // This timer checks the nav buttons every 0.75 seconds, and updates them
     NSTimer *refreshTimer; 
     NSDate  *lastWebViewRefreshDate; //used to keep track of the latest refresh datetime. 
+    EGORefreshTableHeaderView *_refreshHeaderView;
 }
 @property (nonatomic,retain) NSURL *url;
 @property (nonatomic,retain) NSString *username;

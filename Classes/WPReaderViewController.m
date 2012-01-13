@@ -45,6 +45,7 @@
     self.webView = nil;
     self.refreshTimer = nil;
     self.lastWebViewRefreshDate = nil;
+    [_refreshHeaderView release];
     [super dealloc];
 }
 
@@ -70,11 +71,39 @@
 {
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
     [super viewDidLoad];
+
+    UIScrollView *scrollView;
+    if ([self.webView respondsToSelector:@selector(scrollView)]) {
+        scrollView = self.webView.scrollView;
+    } else {
+        for (UIView* subView in self.webView.subviews) {
+            if ([subView isKindOfClass:[UIScrollView class]]) {
+                scrollView = (UIScrollView*)subView;
+            }
+        }
+    }
+
+    if (scrollView != nil && _refreshHeaderView == nil) {
+        scrollView.delegate = self;
+		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - scrollView.bounds.size.height, scrollView.frame.size.width, scrollView.bounds.size.height)];
+		_refreshHeaderView.delegate = self;
+		[scrollView addSubview:_refreshHeaderView];
+	}
+
+	//  update the last update date
+	[_refreshHeaderView refreshLastUpdatedDate];
+
     isLoading = YES;
     [self setLoading:NO];
     self.webView.scalesPageToFit = YES;
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.style.background = '#F2F2F2';"];
     if (self.url) {
+        if (scrollView) {
+            CGPoint offset = scrollView.contentOffset;
+            offset.y = - 65.0f;
+            scrollView.contentOffset = offset;
+            [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+        }
         [self refreshWebView];
     }
     [self addNotifications];
@@ -96,6 +125,7 @@
 {
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];  
    	[self setRefreshTimer:nil];
+    [_refreshHeaderView release];
     self.webView.delegate = nil;
     self.webView = nil;
     [self removeNotifications];
@@ -218,7 +248,6 @@
     } else {
         [self.webView loadRequest:request];         
     }
-    self.lastWebViewRefreshDate = [NSDate date];    
 }
 
 - (void)retryWithLogin {
@@ -256,6 +285,8 @@
         [customView release];
     } else {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reload)] autorelease];
+        [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)_refreshHeaderView.superview];
+        self.lastWebViewRefreshDate = [NSDate date];
     }
     
     if (!loading) {
@@ -268,7 +299,6 @@
             else
                 self.navigationItem.title = @"Read";
         }
-            
     }
     
     isLoading = loading;
@@ -296,6 +326,32 @@
     WordPressAppDelegate *appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate]; 
     [request setValue:[appDelegate applicationUserAgent] forHTTPHeaderField:@"User-Agent"];
     [[[NSURLConnection alloc] initWithRequest:request delegate:nil] autorelease];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	[self refreshWebView];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return isLoading;
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	return self.lastWebViewRefreshDate;
 }
 
 #pragma mark - UIWebViewDelegate
