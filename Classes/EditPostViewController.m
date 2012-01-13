@@ -1043,6 +1043,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationCurve:curve];
 	[UIView setAnimationDuration:animationDuration];
+
     CGRect newFrame = self.normalTextFrame;
 	if(keyboardInfo != nil) {
 		animationDuration = [[keyboardInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
@@ -1050,19 +1051,55 @@ NSTimeInterval kAnimationDuration = 0.3f;
         [UIView setAnimationCurve:curve];
         [UIView setAnimationDuration:animationDuration];
 
-        CGRect keyboardFrame;
-        keyboardFrame = [[keyboardInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        keyboardFrame = [self.view convertRect:[self.view.window convertRect:keyboardFrame fromWindow:nil]
-                                      fromView:nil];
+        BOOL isLandscape = UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+        BOOL isShowing = ([notification name] == UIKeyboardWillShowNotification);
+        CGRect originalKeyboardFrame = [[keyboardInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        CGRect keyboardFrame = [self.view convertRect:[self.view.window convertRect:originalKeyboardFrame fromWindow:nil] fromView:nil];
 
         isExternalKeyboard = keyboardFrame.origin.y + keyboardFrame.size.height > self.view.bounds.size.height;
+        /*
+         "Full screen" mode for:
+         * iPhone without external keyboard
+         * iPhone Landscape with external keyboard
+         * iPad Landscape without external keyboard
 
-        if ([notification name] == UIKeyboardWillShowNotification && !isExternalKeyboard) {
-            newFrame.origin.x = 0;
-            newFrame.origin.y = 0;
-            newFrame.size.height = keyboardFrame.origin.y;
+         Show other fields:
+         * iPhone Portrait with external keyboard
+         * iPad Portrait
+         * iPad Landscape with external keyboard
+         */
+        BOOL wantsFullScreen = (
+                                (!DeviceIsPad() && !isExternalKeyboard)                  // iPhone without external keyboard
+                                || (!DeviceIsPad() && isLandscape && isExternalKeyboard) // iPhone Landscape with external keyboard
+                                || (DeviceIsPad() && isLandscape && !isExternalKeyboard) // iPad Landscape without external keyboard
+                                );
+        if (wantsFullScreen && isShowing) {
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+        } else {
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+        }
+        // If we show/hide the navigation bar, the view frame changes so the converted keyboardFrame is not valid anymore
+        keyboardFrame = [self.view convertRect:[self.view.window convertRect:originalKeyboardFrame fromWindow:nil] fromView:nil];
+
+        if (isShowing) {
+            if (wantsFullScreen) {
+                // Make the text view expand covering other fields
+                newFrame.origin.x = 0;
+                newFrame.origin.y = 0;
+            }
+            // Adjust height for keyboard (or format bar on external keyboard)
+            newFrame.size.height = keyboardFrame.origin.y - newFrame.origin.y;
+
+            [self.toolbar setHidden:YES];
+            [tabPointer setHidden:YES];
+        } else {
+            [self.toolbar setHidden:NO];
+            [tabPointer setHidden:NO];
         }
 	}
+
     [textView setFrame:newFrame];
 	
 	[UIView commitAnimations];
@@ -1427,10 +1464,6 @@ NSTimeInterval kAnimationDuration = 0.3f;
     WPFLogMethod();
 	isShowingKeyboard = YES;
     if (isEditing) {
-        if (!DeviceIsPad()) {
-            [self.navigationController setNavigationBarHidden:YES animated:YES];
-			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-        }
         [self positionTextView:notification];
         editorToolbar.doneButton.hidden = DeviceIsPad() && ! isExternalKeyboard;
     }
@@ -1440,11 +1473,6 @@ NSTimeInterval kAnimationDuration = 0.3f;
     WPFLogMethod();
 	isShowingKeyboard = NO;
     if (isEditing) {
-        if (!DeviceIsPad()) {
-            [self.navigationController setNavigationBarHidden:NO animated:YES];            
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-        }
-        
         [self positionTextView:notification];
     }
 }
