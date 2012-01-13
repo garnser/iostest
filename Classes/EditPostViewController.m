@@ -10,6 +10,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 - (BOOL) isMediaInUploading;
 - (void) showMediaInUploadingalert;
 - (void)restoreText:(NSString *)text withRange:(NSRange)range;
+- (void)populateSelectionsControllerWithCategories;
 @end
 
 @implementation EditPostViewController
@@ -17,7 +18,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 @synthesize selectionTableViewController, segmentedTableViewController;
 @synthesize infoText, urlField, bookMarksArray, selectedLinkRange, currentEditingTextField, isEditing, initialLocation;
 @synthesize editingDisabled, editCustomFields, statuses, isLocalDraft;
-@synthesize textView, contentView, subView, textViewContentView, statusTextField, categoriesTextField, titleTextField;
+@synthesize textView, contentView, subView, textViewContentView, statusTextField, categoriesButton, titleTextField;
 @synthesize tagsTextField, textViewPlaceHolderField, tagsLabel, statusLabel, categoriesLabel, titleLabel, customFieldsEditButton;
 @synthesize locationButton, locationSpinner, newCategoryBarButtonItem, hasLocation;
 @synthesize editMode, apost;
@@ -179,6 +180,13 @@ NSTimeInterval kAnimationDuration = 0.3f;
     [postMediaViewController showPhotoPickerActionSheet:sender];
 }
 
+- (IBAction)showCategories:(id)sender {
+    [self populateSelectionsControllerWithCategories];
+}
+- (IBAction)touchTextView:(id)sender {
+    [textView becomeFirstResponder];
+}
+
 #pragma mark -
 #pragma mark View lifecycle
 
@@ -218,7 +226,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
     self.subView = nil;
     self.textViewContentView = nil;
     self.statusTextField = nil;
-    self.categoriesTextField = nil;
+    self.categoriesButton = nil;
     self.titleTextField = nil;
     self.tagsTextField = nil;
     self.textViewPlaceHolderField = nil;
@@ -457,7 +465,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
     if (self.post) {
         // FIXME: tags should be an array/set of Tag objects
         tagsTextField.text = self.post.tags;
-        categoriesTextField.text = [self.post categoriesText];
+        [categoriesButton setTitle:[self.post categoriesText] forState:UIControlStateNormal];
     }
     
     if(self.apost.content == nil) {
@@ -506,7 +514,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
                 navController = [[[UINavigationController alloc] initWithRootViewController:segmentedTableViewController] autorelease];
             }
  			UIPopoverController *popover = [[[NSClassFromString(@"UIPopoverController") alloc] initWithContentViewController:navController] autorelease];
-            popover.delegate = self;			CGRect popoverRect = [self.view convertRect:[categoriesTextField frame] fromView:[categoriesTextField superview]];
+            popover.delegate = self;			CGRect popoverRect = [self.view convertRect:[categoriesButton frame] fromView:[categoriesButton superview]];
 			popoverRect.size.width = MIN(popoverRect.size.width, 100); // the text field is actually really big
 			[popover presentPopoverFromRect:popoverRect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			[[CPopoverManager instance] setCurrentPopoverController:popover];
@@ -580,7 +588,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
         NSLog(@"selected categories: %@", selectedObjects);
         NSLog(@"post: %@", self.post);
         self.post.categories = [NSMutableSet setWithArray:selectedObjects];
-        categoriesTextField.text = [self.post categoriesText];
+        [categoriesButton setTitle:[self.post categoriesText] forState:UIControlStateNormal];
     }
 	
     [selctionController clean];
@@ -984,12 +992,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (textField == categoriesTextField) {
-        [self populateSelectionsControllerWithCategories];
-        return NO;
-    }
     if (textField == textViewPlaceHolderField) {
-        [textView becomeFirstResponder];
         return NO;
     }
 	return YES;
@@ -1542,7 +1545,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 	[subView release];
 	[textViewContentView release];
 	[statusTextField release];
-	[categoriesTextField release];
+	[categoriesButton release];
 	[titleTextField release];
 	[tagsTextField release];
 	[textViewPlaceHolderField release];
