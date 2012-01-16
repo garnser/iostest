@@ -22,6 +22,14 @@
 @dynamic categories;
 @synthesize specialType;
 
+- (id)init {
+    if (self = [super init]) {
+        appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
+    }
+    
+    return self;
+}
+
 - (void)dealloc {
     self.specialType = nil;
     [super dealloc];
@@ -270,6 +278,38 @@
         return YES;
 
     return NO;
+}
+
+#pragma mark - QuickPhoto
+- (void)instantiateNotificationObservers {
+    if ([[self specialType] isEqualToString:@"QuickPhoto"]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:nil];        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:nil];
+    }
+}
+
+- (void)mediaDidUploadSuccessfully:(NSNotification *)notification {
+    Media *media = (Media *)[notification object];
+    [media save];
+
+    self.content = [NSString stringWithFormat:@"%@\n\n%@", [media html], self.content];
+    [self upload];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)mediaUploadFailed:(NSNotification *)notification {
+    appDelegate.isUploadingPost = NO;
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Quick Photo Failed", @"")
+                                                    message:NSLocalizedString(@"Sorry, the photo upload failed. The post has been saved as a Local Draft.", @"")
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"OK", @"")
+                                          otherButtonTitles:nil];
+    [alert show];
+    [alert release];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

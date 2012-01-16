@@ -83,8 +83,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showBlogWithoutAnimation) name:@"NewBlogAdded" object:nil];
 
     //quick photo upload notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDidUploadSuccessfully:) name:@"PostUploaded" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postUploadFailed:) name:@"PostUploadFailed" object:nil];
     
@@ -559,11 +557,7 @@
     }
 }
 
-- (void)uploadQuickPhoto:(Post *)post{
-    
-    appDelegate.isUploadingPost = YES;
-    
-    quickPicturePost = post;
+- (void)uploadQuickPhoto:(Post *)post {
     if (post != nil) {
         //remove the quick photo button w/ sexy animation
         CGRect frame = quickPhotoButton.frame;
@@ -591,9 +585,6 @@
         uploadController.view.frame = CGRectMake(frame.origin.x, self.view.bounds.size.height - 83, frame.size.width, frame.size.height);
         
         [UIView commitAnimations];
- 
-        //upload the image
-        [[post.media anyObject] performSelector:@selector(upload) withObject:nil];
     }
 }
 
@@ -611,26 +602,6 @@
     uploadController.view.frame = CGRectMake(frame.origin.x, self.view.bounds.size.height + 83, frame.size.width, frame.size.height);
     
     [UIView commitAnimations];
-}
-
-- (void)mediaDidUploadSuccessfully:(NSNotification *)notification {
-    
-    Media *media = (Media *)[notification object];
-    [media save];
-    quickPicturePost.content = [NSString stringWithFormat:@"%@\n\n%@", [media html], quickPicturePost.content];
-    [quickPicturePost upload];    
-}
-
-- (void)mediaUploadFailed:(NSNotification *)notification {
-    appDelegate.isUploadingPost = NO;
-    [self showQuickPhotoButton: NO];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Quick Photo Failed", @"")
-                                                    message:NSLocalizedString(@"Sorry, the photo upload failed. The post has been saved as a Local Draft.", @"")
-                                                   delegate:self
-                                          cancelButtonTitle:NSLocalizedString(@"OK", @"")
-                                          otherButtonTitles:nil];
-    [alert show];
-    [alert release];
 }
 
 - (void)postDidUploadSuccessfully:(NSNotification *)notification {
@@ -670,7 +641,6 @@
 	self.currentBlog = nil;
     [quickPhotoButton release]; quickPhotoButton = nil;
     self.tableView = nil;
-    [quickPicturePost release];
     [uploadController release];
     [readerViewController release]; 
     [super dealloc];
