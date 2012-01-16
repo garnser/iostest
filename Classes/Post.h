@@ -55,7 +55,5 @@
 + (Post *)findWithBlog:(Blog *)blog andPostID:(NSNumber *)postID;
 // Takes the NSDictionary from a XMLRPC call and creates or updates a post
 + (Post *)createOrReplaceFromDictionary:(NSDictionary *)postInfo forBlog:(Blog *)blog;
-// Set up NSNotificationCenter observers
-- (void)instantiateNotificationObservers;
 
 @end

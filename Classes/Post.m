@@ -281,13 +281,6 @@
 }
 
 #pragma mark - QuickPhoto
-- (void)instantiateNotificationObservers {
-    if ([[self specialType] isEqualToString:@"QuickPhoto"]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:nil];        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:nil];
-    }
-}
-
 - (void)mediaDidUploadSuccessfully:(NSNotification *)notification {
     Media *media = (Media *)[notification object];
     [media save];

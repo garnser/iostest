@@ -181,7 +181,9 @@
     post.content = contentTextView.text;
     post.specialType = @"QuickPhoto";
     post.postFormat = @"image";
-    [post instantiateNotificationObservers];
+
+    [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:nil];        
+    [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:nil];
     
     appDelegate.isUploadingPost = YES;
     
