@@ -703,10 +703,10 @@
 
     [pendingApproveButton setTarget:self];
     if ([self isApprove]) {
-        [pendingApproveButton setTitle:NSLocalizedString(@"Approve", @"")];
+        [pendingApproveButton setImage:[UIImage imageNamed:@"approve.png"]];
         [pendingApproveButton setAction:@selector(approveComment:)];
 	} else {
-        [pendingApproveButton setTitle:NSLocalizedString(@"Unapprove", @"")];
+        [pendingApproveButton setImage:[UIImage imageNamed:@"unapprove.png"]];
         [pendingApproveButton setAction:@selector(unApproveComment:)];
 	}
     

@@ -361,6 +361,8 @@ WordPress.xcodeproj/project.pbxproj -text
 /XMLRPCResponse.m -text
 /XMLValueDecoder.h -text
 /XMLValueDecoder.m -text
+/approve.png -text
+/approve@2x.png -text
 /attachment.png -text svneol=unset#unset
 /attachment@2x.png -text svneol=unset#unset
 /autosave.png -text
@@ -607,6 +609,8 @@ sv.lproj/Localizable.strings -text svneol=unset#unset
 /toolbarUlHighlighted@2x.png -text
 /toolbarUliPad.png -text
 tr.lproj/Localizable.strings -text
+/unapprove.png -text
+/unapprove@2x.png -text
 /uncheck.png -text
 /uncheck@2x.png -text
 /uncrustify.cfg -text
