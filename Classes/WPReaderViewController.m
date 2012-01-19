@@ -56,15 +56,6 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil ];
-    if (self) {
-        self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reload)] autorelease];
-    }
-    return self;
-}   
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
