@@ -98,6 +98,7 @@
     if( self.detailContent == nil ) {
         [self setStatusTimer:[NSTimer timerWithTimeInterval:0.75 target:self selector:@selector(upgradeButtonsAndLabels:) userInfo:nil repeats:YES]];
         [[NSRunLoop currentRunLoop] addTimer:[self statusTimer] forMode:NSDefaultRunLoopMode];
+        if( self.isRefreshButtonEnabled == NO ) self.navigationItem.rightBarButtonItem.enabled = NO;
     } else {
         //do not set the timer on the detailsView
 
@@ -105,11 +106,21 @@
         [backButton setImage:[UIImage imageNamed:@"previous.png"]];
         [forwardButton setImage:[UIImage imageNamed:@"next.png"]];
         
+        // Replace refresh button with options button
+        if( self.isRefreshButtonEnabled == NO ) {
+            backButton.width = (toolbar.frame.size.width / 2) - 10;
+            forwardButton.width = (toolbar.frame.size.width / 2) - 10;
+            NSArray *items = [NSArray arrayWithObjects:backButton,
+                              [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
+                              forwardButton, nil];
+            toolbar.items = items;
+            self.navigationItem.rightBarButtonItem = optionsButton;
+        }
+
         //you got pink'd!
         //[toolbar setTintColor:[UIColor colorWithRed:254.0f/255 green:14.0f/255 blue:204.0f/255 alpha:1.0f]];
 		[toolbar setTintColor:[UIColor colorWithRed:96.0f/255 green:101.0f/255 blue:111.0f/255 alpha:1.0f]];
     }
-    if( self.isRefreshButtonEnabled == NO ) self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
