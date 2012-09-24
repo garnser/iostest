@@ -9,6 +9,9 @@
 #import "WPWebViewController.h"
 #import "WordPressAppDelegate.h"
 #import "PanelNavigationConstants.h"
+#import "FileLogger.h"
+#import "UIColor+Helpers.h"
+#import "NSString+Util.h"
 
 @class WPReaderDetailViewController;
 
@@ -453,21 +456,8 @@
 }
 
 - (void)showLinkOptions{
-    if (self.linkOptionsActionSheet) {
-        [self.linkOptionsActionSheet dismissWithClickedButtonIndex:-1 animated:NO];
-        self.linkOptionsActionSheet = nil;
-    }
-    NSString* permaLink = [self getDocumentPermalink];
-    
-    if( permaLink == nil || [[permaLink trim] isEqualToString:@""] ) return; //this should never happen
-    
-    self.linkOptionsActionSheet = [[[UIActionSheet alloc] initWithTitle:permaLink delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Open in Safari", @"Open in Safari"), NSLocalizedString(@"Mail Link", @"Mail Link"),  NSLocalizedString(@"Copy Link", @"Copy Link"), nil] autorelease];
-    self.linkOptionsActionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    if(IS_IPAD ){
-        [self.linkOptionsActionSheet showFromBarButtonItem:self.optionsButton animated:YES];
-    } else {
-        [self.linkOptionsActionSheet showInView:self.view];
-    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    return;
 }
 
 - (void)reload {

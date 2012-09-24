@@ -11,6 +11,9 @@
 #import "CameraPlusPickerManager.h"
 #import "PanelNavigationController.h"
 #import "SidebarViewController.h"
+#import "FileLogger.h"
+#import "AFNetworkActivityIndicatorManager.h"
+#import "UIColor+Helpers.h"
 
 @interface WordPressAppDelegate (Private)
 - (void)setAppBadge;
@@ -19,6 +22,7 @@
 - (void)showPasswordAlert;
 - (void)cleanUnusedMediaFileFromTmpDir;
 - (void)customizeAppearance;
+- (void)handleFeatureNotAvailable:(NSNotification *)notification;
 @end
 
 NSString *CrashFilePath() {
@@ -236,7 +240,10 @@ static WordPressAppDelegate *wordPressApp = NULL;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(deleteLocalDraft:)
 												 name:@"LocalDraftWasPublishedSuccessfully" object:nil];
-		
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleFeatureNotAvailable:)
+                                                 name:kFeatureNotAvailableNotification object:nil];
 	
 	//listener for XML-RPC errors
 	//in the future we could put the errors message in a dedicated screen that users can bring to front when samething went wrong, and can take a look at the error msg.
@@ -407,6 +414,17 @@ static WordPressAppDelegate *wordPressApp = NULL;
 
 #pragma mark -
 #pragma mark Public Methods
+
+- (void)handleFeatureNotAvailable:(NSNotification *)notification {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                        message:@"Feature not enabled for this demo"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil, nil];
+    [alertView show];
+    [alertView release];
+}
+
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
 	WPLog(@"Showing alert with title: %@", message);

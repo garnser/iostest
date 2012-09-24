@@ -29,6 +29,7 @@
 #import "QuickPhotoViewController.h"
 #import "QuickPhotoButtonView.h"
 #import "CrashReportViewController.h"
+#import "FileLogger.h"
 
 // Height for reader/notification/blog cells
 #define SIDEBAR_CELL_HEIGHT 51.0f
@@ -914,33 +915,7 @@
                 }        
                 return;
             case 5:
-                 dashboardURL = [blog.xmlrpc stringByReplacingOccurrencesOfString:@"xmlrpc.php" withString:@"wp-admin/"];
-                //dashboard already selected
-                if ([self.panelNavigationController.detailViewController isMemberOfClass:[WPWebViewController class]] 
-                    && 
-                    [((WPWebViewController*)self.panelNavigationController.detailViewController).url.absoluteString isEqual:dashboardURL]
-                    ) {
-                    if (IS_IPAD) {
-                        [self.panelNavigationController showSidebar];
-                    } else {
-                        [self.panelNavigationController popToRootViewControllerAnimated:NO];
-                        [self.panelNavigationController closeSidebar];
-                    }
-                } else {
-                    
-                    WPWebViewController *webViewController;
-                    if ( IS_IPAD ) {
-                        webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController-iPad" bundle:nil] autorelease];
-                    }
-                    else {
-                        webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController" bundle:nil] autorelease];
-                    }
-                    [webViewController setUrl:[NSURL URLWithString:dashboardURL]];
-                    [webViewController setUsername:blog.username];
-                    [webViewController setPassword:[blog fetchPassword]];
-                    [webViewController setWpLoginURL:[NSURL URLWithString:blog.loginURL]];
-                    [self.panelNavigationController setDetailViewController:webViewController closingSidebar:closingSidebar];
-                }                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
                 return;
             default:
                 controllerClass = [PostsViewController class];

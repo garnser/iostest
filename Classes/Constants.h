@@ -41,6 +41,7 @@
 #define kJetPackURL             @"http://jetpack.me"
 #define kWPcomXMLRPCUrl         @"https://wordpress.com/xmlrpc.php"
 
+#define kFeatureNotAvailableNotification @"kFeatureNotAvailableNotification"
 
 #define kDisabledTextColor      [UIColor grayColor]
 
