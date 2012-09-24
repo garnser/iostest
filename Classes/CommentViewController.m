@@ -14,6 +14,9 @@
 #import "SFHFKeychainUtils.h"
 #import "UIColor+Helpers.h"
 #import "UIBarButtonItem+Styled.h"
+#import "NSObject+BlockObservation.h"
+#import "FileLogger.h"
+#import "NSString+Util.h"
 
 #define COMMENT_BODY_TOP        100
 #define COMMENT_BODY_MAX_HEIGHT 4000
@@ -279,7 +282,6 @@
 
 - (void)closeReplyViewAndSelectTheNewComment {
 	[self dismissEditViewController];
-    // TODO: Select new comment or dismiss comment view on iPhone
 }
 
 - (void)cancelView:(id)sender {
@@ -691,46 +693,15 @@
 }
 
 - (IBAction)viewURL{
-	NSURL *url = [NSURL URLWithString: [self.comment.author_url trim]];
-    [self openInAppWebView:url];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 - (void)sendEmail{
-	if (self.comment.author_email && [MFMailComposeViewController canSendMail]) {
-		MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-		controller.mailComposeDelegate = self;
-		NSArray *recipient = [[NSArray alloc] initWithObjects:[self.comment.author_email trim], nil];
-		[controller setToRecipients: recipient];
-		[controller setSubject:[NSString stringWithFormat:NSLocalizedString(@"Re: %@", @""), self.comment.postTitle]]; 
-		[controller setMessageBody:[NSString stringWithFormat:NSLocalizedString(@"Hi %@,", @""), self.comment.author] isHTML:NO];
-		[self presentModalViewController:controller animated:YES];
-		[recipient release];
-		[controller release];
-	}
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 - (void)openInAppWebView:(NSURL*)url {
-    Blog *blog = [[self comment] blog];
-    
-	if (url != nil && [[url description] length] > 0) {
-        WPWebViewController *webViewController;
-        if (IS_IPAD) {
-            webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController-iPad" bundle:nil] autorelease];
-        }
-        else {
-            webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController" bundle:nil] autorelease];
-        }
-        [webViewController setUrl:url];
-
-        if (blog.isPrivate && [blog isWPcom]) {
-            NSError *error;
-            webViewController.username = blog.username;
-            webViewController.password = [SFHFKeychainUtils getPasswordForUsername:blog.username andServiceName:@"WordPress.com" error:&error];
-        }
-        
-        if ( self.panelNavigationController  )
-            [self.panelNavigationController pushViewController:webViewController fromViewController:self animated:YES];
-	}
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 - (IBAction)handlePostTitleButtonTapped:(id)sender {
