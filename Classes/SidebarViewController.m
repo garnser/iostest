@@ -454,26 +454,15 @@
     
     [self.panelNavigationController showSidebar];
     
-	UIActionSheet *actionSheet = nil;
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        if ([[CameraPlusPickerManager sharedManager] cameraPlusPickerAvailable]) {
-            actionSheet = [[UIActionSheet alloc] initWithTitle:@"" 
-                                                      delegate:self 
-                                             cancelButtonTitle:NSLocalizedString(@"Cancel", @"") 
-                                        destructiveButtonTitle:nil 
-                                             otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),NSLocalizedString(@"Add Photo from Camera+", @""), NSLocalizedString(@"Take Photo with Camera+", @""),nil];
-        } else {
-            actionSheet = [[UIActionSheet alloc] initWithTitle:@"" 
-                                                      delegate:self 
-                                             cancelButtonTitle:NSLocalizedString(@"Cancel", @"") 
-                                        destructiveButtonTitle:nil 
-                                             otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),nil];            
-        }
-	} else {
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary useCameraPlus:NO withImage:nil];
         return;
-	}
-    
+    }
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                              delegate:self 
+                                     cancelButtonTitle:NSLocalizedString(@"Cancel", @"") 
+                                destructiveButtonTitle:nil 
+                                     otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     if (IS_IPAD) {
         [actionSheet showFromRect:quickPhotoButton.frame inView:utililtyView animated:YES];
