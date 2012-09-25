@@ -375,15 +375,17 @@ static WordPressAppDelegate *wordPressApp = NULL;
      }];
      }*/
     
-    // The Demo app clears its DB every time it exits
-    NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"WordPress.sqlite"];
-    [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
-    
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         WPFLog(@"Unresolved Core Data Save error %@, %@", error, [error userInfo]);
         exit(-1);
     }
+    
+    persistentStoreCoordinator_ = nil;
+    
+    // The Demo app clears its DB every time it exits
+    NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"WordPress.sqlite"];
+    [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -401,6 +403,7 @@ static WordPressAppDelegate *wordPressApp = NULL;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationDidBecomeActive" object:nil];
     
+    [self persistentStoreCoordinator];
     // Clear notifications badge and update server
     // TODO: read/unread management when there's an API for it
     [self setAppBadge];
