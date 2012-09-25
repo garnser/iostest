@@ -9,6 +9,7 @@
 #import "WPWebBridge.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "JSONKit.h"
+#import "WPDemo.h"
 
 @implementation WPWebBridge
 
@@ -54,6 +55,7 @@
 
 - (BOOL)requestIsValidHybridRequest:(NSURLRequest *)request {
     
+    
     return [request.URL.host isEqualToString:kAuthorizedHybridHost];
     
 }
@@ -65,6 +67,7 @@
 
 + (NSString *)hybridAuthToken
 {
+    WPDEMO_RETURN(@"DEMO");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *token = [defaults stringForKey:kHybridTokenSetting];
     if (token == nil)
@@ -123,7 +126,7 @@
     }];
     
     NSString *payload_data = [(NSString *)[params objectForKey:@"payload"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    if (![self.hybridAuthToken isEqualToString:[params objectForKey:@"wpcom-hybrid-auth-token"]]) {
+    if (![self hybridTokenIsValid:[params objectForKey:@"wpcom-hybrid-auth-token"]]) {
         WPFLog(@"Invalid hybrid token received %@ (expected: %@)", [params objectForKey:@"wpcom-hybrid-auth-token"], self.hybridAuthToken);
         return;
     }
@@ -151,7 +154,7 @@
         if (invocation && [self.delegate respondsToSelector:aSelector]) {
             @try {
                 [invocation invoke];
-                WPFLog(@"Hybrid: %@ %@", self.delegate, methodName);
+                NSLog(@"Hybrid: %@ %@ %@", self.delegate, methodName, args);
             }
             @catch (NSException *exception) {
                 WPFLog(@"Hybrid exception on %@ %@", self.delegate, methodName);
@@ -164,6 +167,10 @@
         
     }];
     
+}
+
+- (BOOL)hybridTokenIsValid:(NSString *)token {
+    return [self.hybridAuthToken isEqualToString:token];
 }
 
 

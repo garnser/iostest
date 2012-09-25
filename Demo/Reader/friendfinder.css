@@ -1,0 +1,269 @@
+body {
+	background: rgb(92%,92%,92%);
+}
+	
+section {
+	font-size: 18px;
+}
+	
+#sources ul {
+	margin: 10px;
+	list-style: none;
+	padding: 0;
+}
+	
+#sources .loader {
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	border-radius: 2px;
+	display: none;
+}
+	
+#sources .loader span {
+	position: absolute;
+	top: -10px;
+	right: 0;
+	width: 12px;
+	height: 12px;
+	border: 4px solid #333;
+	border-radius: 10px;
+	-webkit-animation: throb 600ms infinite ease-out;
+}
+	
+#sources .searching .loader {
+	display: block;
+}
+	
+#sources .searched:after {
+	font-family: Marker Felt;
+	content: "✔";
+	font-size: 32px;
+	position: absolute;
+	right: 12px;
+	top: 12px;
+	color: #666;
+}
+	
+#sources .searching.searched:after {
+	content: '';
+}
+	
+	
+@-webkit-keyframes throb {
+	from { opacity: 1; -webkit-transform: scale3d(0,0,0); }
+	50%  { opacity: 0.6; }
+		to { opacity: 0; -webkit-transform: scale3d(1,1,0); }
+}
+	
+#sources li {
+	border: 1px solid #CCC;
+	padding: 10px 15px;
+	border-bottom-width: 0;
+	min-height: 32px;
+	line-height: 1.2;
+	background: #FFF;
+	position: relative;
+	overflow: hidden;
+	display: none;
+}
+	
+#sources li strong {
+	display: block;
+	font-weight: normal;
+	font-size: 18px;
+}
+	
+#sources li small {
+	color: #666;
+	display: block;
+	font-size: 14px;
+}
+	
+#sources li:first-child {
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+}
+	
+#sources li:last-child {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-width: 1px;
+}
+	
+#sources li:first-child:last-child {
+	border-radius: 5px;
+	border-width: 1px;
+}
+	
+#sources li:active {
+	background: hsl(199,38%,52%);
+	color: #FFF;
+}
+	
+#sources li:active strong, #sources li:active small {
+	color: #FFF;
+}
+	
+#friends {
+	background: #FFF;
+}
+	
+#friends ul {
+	list-style: none;
+}
+	
+li.friend {
+	padding: 10px;
+	border-bottom: 1px solid #CCC;
+	position: relative;
+	-webkit-tap-highlight-color: hsla(0,0%,0%,0);
+	-webkit-transition: 500ms opacity;
+	background-color: hsl(95%,95%,95%);
+}
+	
+li.friend:first-child {
+	border-top: 1px solid #CCC;
+}
+	
+li.friend > img {
+	float: left;
+	width: 48px;
+	height: 48px;
+	border-radius: 2px;
+	background: #CCC;
+	box-shadow: 0 1px 0 hsla(0,0%,100%,1);
+}
+	
+#friends a {
+	position: absolute;
+	top: 10px;
+	right: 9px;
+	width: 48px;
+	height: 48px;
+	overflow: hidden;
+	border: 1px solid hsl(0,0%,50%);
+	background: -webkit-linear-gradient(hsl(0,0%,95%), hsl(0,0%,84%));
+	border-radius: 4px;
+	-webkit-tap-highlight-color: hsla(0,0%,0%,0);
+	text-decoration: none;
+	color: #666;
+	box-shadow: 0 1px 0 hsla(0,0%,100%,1);
+	text-shadow: 0 1px 0 hsla(0,0%,100%,1);
+}
+	
+a.subscribe:after {
+	content: '+';
+	position: absolute;
+	top: -5px;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	font-size: 42px;
+	line-height: 50px;
+	font-weight: bold;
+}
+	
+.subscribed a.subscribe:after {
+	content: "–";
+}
+
+#friends a:active, #friends a.simulate-active {
+	background: -webkit-linear-gradient(hsl(199,38%,52%), hsl(198,69%,33%));
+	color: #FFF;
+	text-shadow: 0 -1px 0 hsla(0,0%,0%,0.3);
+}
+
+		
+li.friend:after {
+	content: '';
+	display:block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+}
+	
+li.friend > h2, li.friend > h3, li.friend > p {
+	margin: 0 58px 0 58px;
+	white-space: nowrap;
+	line-height: 1.2;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0;
+}
+	
+li.friend > h2 {
+	margin-top: 2px;
+	font-size: 18px;
+}
+	
+li.friend > h3 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+li.friend > p {
+	font-size: 16px;
+	font-weight: normal;
+	color: #666;
+}
+	
+ul.services {
+	float: left;
+	margin-top: 1px;
+	margin-left: -1px;
+	clear: left;
+}
+	
+ul.services li {
+	color: #FFF;
+	font-size: 10px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	margin-right: 1px;
+	text-align: center;
+	border-radius: 2px;
+	vertical-align: top;
+	text-indent: 100%;
+	overflow: hidden;
+}
+	
+	
+li.friend.email li.email, li.friend.twitter li.twitter, li.friend.facebook li.facebook {
+	color: #FFF;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:1.5){
+	
+	ul.services li {
+		background-size: 16px 16px;
+	}
+	
+	ul.services li.email {
+		background-image: url(service_email_off_2x.png);
+	}
+	
+	li.friend.email li.email {
+		background-image: url(service_email_2x.png);
+	}
+
+	ul.services li.twitter {
+		background-image: url(service_twitter_off_2x.png);
+	}
+	
+	li.friend.twitter li.twitter {
+		background-image: url(service_twitter_2x.png);
+	}
+
+	ul.services li.facebook {
+		background-image: url(service_facebook_off_2x.png);
+	}
+	
+	li.friend.facebook li.facebook {
+		background-image: url(service_facebook_2x.png);
+	}
+	
+}

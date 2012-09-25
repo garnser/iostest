@@ -127,6 +127,17 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
     [self setLoading:NO];
     self.webView.scalesPageToFit = YES;
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.style.background = '#F2F2F2';"];
+    
+    WPDEMO_ONLY(^{
+        NSBundle *bundle = [NSBundle mainBundle];
+        NSURL *localReader = [bundle URLForResource:@"index"
+                                      withExtension:@"html"
+                                       subdirectory:@"Demo/Reader"];
+        [self.webView loadRequest:[NSURLRequest requestWithURL:localReader]];
+        self.detailViewController.url = [bundle URLForResource:@"detail" withExtension:@"html" subdirectory:@"Demo/Reader"];
+  }, nil);
+    
+    WPDEMO_RETURN();
 
     
     if (self.url) {
@@ -195,7 +206,6 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 - (id)nextItemForDetailController:(WPReaderDetailViewController *)detailController
 {
     NSString *item = [self.webView stringByEvaluatingJavaScriptFromString:@"Reader2.get_next_item()"];
-    NSLog(@"Next: %@", item);
     return item;
 }
 
@@ -244,6 +254,7 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 
 - (void)setSelectedTopic:(NSString *)topicId;
 {
+    WPDEMO_RETURN();
     [FileLogger log:@"%@ %@ %@", self, NSStringFromSelector(_cmd), topicId];
     [self.topicsViewController setSelectedTopic:topicId];
     [self setTitle:[self.topicsViewController selectedTopicTitle]];
@@ -327,6 +338,7 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 
 - (void)showArticleDetails:(id)item
 {
+    WPDEMO_RETURN();
     NSDictionary *article = (NSDictionary *)item;
     [self.panelNavigationController popToRootViewControllerAnimated:NO];
     self.detailViewController.currentItem = [article JSONString];
@@ -480,6 +492,10 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
         }
     }
     
+    if ([[requestedURL absoluteString] rangeOfString:@"/Demo/Reader/"].location != NSNotFound) {
+        WPDEMO_RETURN(YES);
+    }
+    
     if ( ![requestedURL isEqual:self.url] && [requestedURLAbsoluteString rangeOfString:@"wp-login.php"].location == NSNotFound ) {
                 
         if ( [requestedURLAbsoluteString rangeOfString:kMobileReaderDetailLegacyURL].location != NSNotFound ) {
@@ -548,10 +564,10 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 
 - (BOOL) shouldDisplayfriendFinderNudgeView {
     
+    WPDEMO_RETURN(NO);
     #ifdef DEBUG
     return self.friendFinderNudgeView == nil;
     #endif
-    WPDEMO_RETURN(NO);
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     return ![userDefaults boolForKey:WPReaderViewControllerDisplayedFriendFinder] && self.friendFinderNudgeView == nil;
 }

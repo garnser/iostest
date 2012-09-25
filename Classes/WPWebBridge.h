@@ -22,5 +22,6 @@
 - (BOOL)requestIsValidHybridRequest:(NSURLRequest *)request;
 + (NSURL *)authorizeHybridURL:(NSURL *) url;
 + (BOOL)isValidHybridURL:(NSURL *)url;
+- (BOOL)hybridTokenIsValid:(NSString *)token;
 
 @end

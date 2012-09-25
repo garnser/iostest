@@ -1,0 +1,54 @@
+#pull-refresh {
+	background: #DDD;
+}
+
+#subscriptions {
+	background: #DDD;
+}
+
+.subs-item {
+	margin: 6px;
+	background: #FFFFFF;
+	padding: 8px;
+	-webkit-tap-highlight-color: hsla(0, 0%, 94%, 1.0);
+}
+
+.subs-item-main {
+	padding-right: 0;
+	background: url(/wp-content/themes/h4/i/mobile/v2/read.png) no-repeat 200% 200%;
+}
+
+.subs-item-main .excerpt {
+	margin: 0;
+	padding: 0;
+	max-height: none !important;
+}
+
+.excerpt img.size-full, .excerpt i.size-full {
+	height: auto;
+	margin: 6px auto;
+	max-height: none;
+	overflow: hidden;
+}
+
+.info {
+	margin: -9px -6px 0 0;
+}
+
+.info span {
+	border-left: none;
+}
+
+.excerpt .full, .excerpt ul.thumb-list {
+	padding: 0;
+	max-height: 240px !important;
+}
+
+#loader2 {
+	border-top: none;
+}
+
+.subs-item,
+#loading-more {
+	border-top: none;
+}
