@@ -7,6 +7,7 @@
 //
 
 #import "Comment.h"
+#import "WPDemo.h"
 
 @interface Comment (PrivateMethods)
 + (Comment *)newCommentForBlog:(Blog *)blog;
@@ -144,16 +145,25 @@
 
 //this is used on reply and edit only
 - (void)uploadWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
-    void (^uploadSuccessful)() = ^{
-        [self getCommentWithSuccess:nil failure:nil];
+   
+    WPDEMO_ONLY(^{
+        if ( ! self.commentID) {
+            self.commentID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
+        }
+        [self save];
         if (success) success();
-    };
-
-    if (self.commentID) {
-        [self editCommentWithSuccess:uploadSuccessful failure:failure];
-    } else {
-        [self postCommentWithSuccess:uploadSuccessful failure:failure];
-	}
+    }, ^{
+        void (^uploadSuccessful)() = ^{
+            [self getCommentWithSuccess:nil failure:nil];
+            if (success) success();
+        };
+        
+        if (self.commentID) {
+            [self editCommentWithSuccess:uploadSuccessful failure:failure];
+        } else {
+            [self postCommentWithSuccess:uploadSuccessful failure:failure];
+        }
+    });
 }
 
 - (void)approve {
@@ -161,12 +171,17 @@
 	if([prevStatus isEqualToString:@"approve"])
 		return;
 	self.status = @"approve";
-    [self editCommentWithSuccess:^(){
+    
+    WPDEMO_ONLY(^{
         [self save];
-    } failure:^(NSError *error) {
-        self.status = prevStatus;
-        [self save];
-    }];
+    }, ^{
+        [self editCommentWithSuccess:^(){
+            [self save];
+        } failure:^(NSError *error) {
+            self.status = prevStatus;
+            [self save];
+        }];
+    });
 }
 
 - (void)unapprove {
@@ -174,12 +189,17 @@
 	if([prevStatus isEqualToString:@"hold"])
     	return;
 	self.status = @"hold";
-    [self editCommentWithSuccess:^(){
+    
+    WPDEMO_ONLY(^{
         [self save];
-    } failure:^(NSError *error) {
-        self.status = prevStatus;
-        [self save];
-    }];
+    }, ^{
+        [self editCommentWithSuccess:^(){
+            [self save];
+        } failure:^(NSError *error) {
+            self.status = prevStatus;
+            [self save];
+        }];
+    });
 }
 
 - (void)spam {
@@ -187,21 +207,32 @@
 	if([prevStatus isEqualToString:@"spam"])
     	return;
     self.status = @"spam";
-    [self editCommentWithSuccess:^(){
+    
+    WPDEMO_ONLY(^{
         [[self managedObjectContext] deleteObject:self];
         [self save];
-    } failure:^(NSError *error) {
-        self.status = prevStatus;
-        [self save];
-    }];
+    }, ^{
+        [self editCommentWithSuccess:^(){
+            [[self managedObjectContext] deleteObject:self];
+            [self save];
+        } failure:^(NSError *error) {
+            self.status = prevStatus;
+            [self save];
+        }];
+    });
 }
 
 - (void)remove {
-    if (self.commentID) {
-        [self deleteCommentWithSuccess:nil failure:nil];
-    }
-    [[self managedObjectContext] deleteObject:self];
-    [self save];
+    WPDEMO_ONLY(^{
+        [[self managedObjectContext] deleteObject:self];
+        [self save];
+    }, ^{
+        if (self.commentID) {
+            [self deleteCommentWithSuccess:nil failure:nil];
+        }
+        [[self managedObjectContext] deleteObject:self];
+        [self save];
+    });
 }
 
 #pragma mark - Private Methods
