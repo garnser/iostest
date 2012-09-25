@@ -17,6 +17,7 @@
 #import "NSObject+BlockObservation.h"
 #import "FileLogger.h"
 #import "NSString+Util.h"
+#import "WPDemo.h"
 
 #define COMMENT_BODY_TOP        100
 #define COMMENT_BODY_MAX_HEIGHT 4000
@@ -693,15 +694,53 @@
 }
 
 - (IBAction)viewURL{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        NSURL *url = [NSURL URLWithString: [self.comment.author_url trim]];
+        [self openInAppWebView:url];
+    });
 }
 
 - (void)sendEmail{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        if (self.comment.author_email && [MFMailComposeViewController canSendMail]) {
+            MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+            controller.mailComposeDelegate = self;
+            NSArray *recipient = [[NSArray alloc] initWithObjects:[self.comment.author_email trim], nil];
+            [controller setToRecipients: recipient];
+            [controller setSubject:[NSString stringWithFormat:NSLocalizedString(@"Re: %@", @""), self.comment.postTitle]];
+            [controller setMessageBody:[NSString stringWithFormat:NSLocalizedString(@"Hi %@,", @""), self.comment.author] isHTML:NO];
+            [self presentModalViewController:controller animated:YES];
+            [recipient release];
+            [controller release];
+        }
+    });
 }
 
 - (void)openInAppWebView:(NSURL*)url {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        Blog *blog = [[self comment] blog];
+        
+        if (url != nil && [[url description] length] > 0) {
+            WPWebViewController *webViewController;
+            if (IS_IPAD) {
+                webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController-iPad" bundle:nil] autorelease];
+            }
+            else {
+                webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController" bundle:nil] autorelease];
+            }
+            [webViewController setUrl:url];
+            
+            if (blog.isPrivate && [blog isWPcom]) {
+                NSError *error;
+                webViewController.username = blog.username;
+                webViewController.password = [SFHFKeychainUtils getPasswordForUsername:blog.username andServiceName:@"WordPress.com" error:&error];
+            }
+            
+            if ( self.panelNavigationController  )
+                [self.panelNavigationController pushViewController:webViewController fromViewController:self animated:YES];
+        }
+
+    });
 }
 
 - (IBAction)handlePostTitleButtonTapped:(id)sender {

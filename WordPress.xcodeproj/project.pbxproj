@@ -1388,6 +1388,7 @@
 		E1B62A8A13AAA96F00A6FCA4 /* keyboardButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keyboardButton@2x.png"; sourceTree = "<group>"; };
 		E1B7B981131553FF005318BD /* FileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLogger.h; sourceTree = "<group>"; };
 		E1B7B982131553FF005318BD /* FileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLogger.m; sourceTree = "<group>"; };
+		E1C30CCB1611C368004E6230 /* WPDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WPDemo.h; sourceTree = "<group>"; };
 		E1C43CA512E4D09E00330262 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
 		E1C43CA612E4D09E00330262 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 		E1CAAE3513F413F00000C58D /* WPKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPKeyboardToolbar.h; sourceTree = "<group>"; };
@@ -1579,6 +1580,7 @@
 				E1F808221464205100726BC7 /* WPAFNetworking.h */,
 				28A0AAE50D9B0CCF005BE974 /* WordPress_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				E1C30CCB1611C368004E6230 /* WPDemo.h */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";

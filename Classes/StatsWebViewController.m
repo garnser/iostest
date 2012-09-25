@@ -16,6 +16,7 @@
 #import "JetpackAuthUtil.h"
 #import "JetpackSettingsViewController.h"
 #import "EditSiteViewController.h"
+#import "WPDemo.h"
 
 @interface StatsWebViewController () <SettingsViewControllerDelegate, JetpackAuthUtilDelegate> {
     BOOL loadStatsWhenViewAppears;
@@ -409,10 +410,40 @@ static NSString *_lastAuthedName = nil;
 - (BOOL)wpWebView:(WPWebView *)wpWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     
     if (navigationType == UIWebViewNavigationTypeLinkClicked || navigationType == UIWebViewNavigationTypeFormSubmitted) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
-        return NO;
+        WPDEMO_FEATURE_UNAVAILABLE(nil);
+        WPDEMO_RETURN(NO);
     }
+
+    [FileLogger log:@"The following URL was requested: %@", [request.URL absoluteString]];
     
+    // On an ajax powered page like stats that manage state via the url hash, if we spawn a new controller when tapping on a link
+    // (like we do in the WPChromelessWebViewController)
+    // and then tap on the same link again, the second tap will not trigger the UIWebView delegate methods, and the new page will load
+    // in the webview in which the link was tapped instead of spawning a new controller.
+    // To avoid this we'll override the super implementation and just handle all internal links here.
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        
+        // If the url is not part of the webstats then handle it differently.
+        NSString *host = request.URL.host;
+        NSString *query = request.URL.query;
+        if (!query) query = @"";
+        
+        if ([host rangeOfString:@"wordpress.com"].location == NSNotFound ||
+            [query rangeOfString:@"no-chrome"].location == NSNotFound) {
+            WPWebViewController *controller;
+            if (IS_IPAD) {
+                controller = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController-iPad" bundle:nil] autorelease];
+            } else {
+                controller = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController" bundle:nil] autorelease];
+            }
+            [controller setUrl:request.URL];
+            [self.panelNavigationController pushViewController:controller fromViewController:self animated:YES];
+            return NO;
+        }
+        
+    }
+
+    [FileLogger log:@"Stats webView is going to load the following URL: %@", [request.URL absoluteString]];
     return YES;
 }
 

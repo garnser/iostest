@@ -2,6 +2,7 @@
 #import "WordPressAppDelegate.h"
 #import "NSString+Helpers.h"
 #import "FileLogger.h"
+#import "WPDemo.h"
 
 @interface PostPreviewViewController (Private)
 
@@ -208,7 +209,9 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)awebView {
 	[activityFooter stopAnimating];
-    [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none';"];
+    WPDEMO_ONLY(^{
+        [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none';"];
+    }, nil);
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -218,8 +221,8 @@
 
 - (BOOL)webView:(UIWebView *)awebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     if (navigationType == UIWebViewNavigationTypeLinkClicked || navigationType == UIWebViewNavigationTypeFormSubmitted) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
-        return NO;
+        WPDEMO_FEATURE_UNAVAILABLE(nil);
+        WPDEMO_RETURN(NO);
     }
     return YES;
     //return isWebRefreshRequested || postDetailViewController.navigationItem.rightBarButtonItem != nil;

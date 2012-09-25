@@ -30,6 +30,7 @@
 #import "QuickPhotoButtonView.h"
 #import "CrashReportViewController.h"
 #import "FileLogger.h"
+#import "WPDemo.h"
 
 // Height for reader/notification/blog cells
 #define SIDEBAR_CELL_HEIGHT 51.0f
@@ -454,15 +455,30 @@
     
     [self.panelNavigationController showSidebar];
     
-    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+	UIActionSheet *actionSheet = nil;
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        __block BOOL cameraPlusAvailable = [[CameraPlusPickerManager sharedManager] cameraPlusPickerAvailable];
+        WPDEMO_ONLY(^{
+            cameraPlusAvailable = NO;
+        }, nil);
+        if (cameraPlusAvailable) {
+            actionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                                      delegate:self
+                                             cancelButtonTitle:NSLocalizedString(@"Cancel", @"")
+                                        destructiveButtonTitle:nil
+                                             otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),NSLocalizedString(@"Add Photo from Camera+", @""), NSLocalizedString(@"Take Photo with Camera+", @""),nil];
+        } else {
+            actionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                                      delegate:self
+                                             cancelButtonTitle:NSLocalizedString(@"Cancel", @"")
+                                        destructiveButtonTitle:nil
+                                             otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),nil];
+        }
+	} else {
         [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary useCameraPlus:NO withImage:nil];
         return;
-    }
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@""
-                                              delegate:self 
-                                     cancelButtonTitle:NSLocalizedString(@"Cancel", @"") 
-                                destructiveButtonTitle:nil 
-                                     otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),nil];
+	}
+    
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     if (IS_IPAD) {
         [actionSheet showFromRect:quickPhotoButton.frame inView:utililtyView animated:YES];
@@ -904,7 +920,35 @@
                 }        
                 return;
             case 5:
-                [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+                dashboardURL = [blog.xmlrpc stringByReplacingOccurrencesOfString:@"xmlrpc.php" withString:@"wp-admin/"];
+                WPDEMO_FEATURE_UNAVAILABLE(^{
+                    //dashboard already selected
+                    if ([self.panelNavigationController.detailViewController isMemberOfClass:[WPWebViewController class]]
+                        &&
+                        [((WPWebViewController*)self.panelNavigationController.detailViewController).url.absoluteString isEqual:dashboardURL]
+                        ) {
+                        if (IS_IPAD) {
+                            [self.panelNavigationController showSidebar];
+                        } else {
+                            [self.panelNavigationController popToRootViewControllerAnimated:NO];
+                            [self.panelNavigationController closeSidebar];
+                        }
+                    } else {
+                        
+                        WPWebViewController *webViewController;
+                        if ( IS_IPAD ) {
+                            webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController-iPad" bundle:nil] autorelease];
+                        }
+                        else {
+                            webViewController = [[[WPWebViewController alloc] initWithNibName:@"WPWebViewController" bundle:nil] autorelease];
+                        }
+                        [webViewController setUrl:[NSURL URLWithString:dashboardURL]];
+                        [webViewController setUsername:blog.username];
+                        [webViewController setPassword:[blog fetchPassword]];
+                        [webViewController setWpLoginURL:[NSURL URLWithString:blog.loginURL]];
+                        [self.panelNavigationController setDetailViewController:webViewController closingSidebar:closingSidebar];
+                    }
+                });
                 return;
             default:
                 controllerClass = [PostsViewController class];

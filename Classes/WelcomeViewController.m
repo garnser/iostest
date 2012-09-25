@@ -15,6 +15,7 @@
 #import "WebSignupViewController.h"
 #import "WPcomLoginViewController.h"
 #import "WordPressComApi.h"
+#import "WPDemo.h"
 
 @interface WelcomeViewController () <WPcomLoginViewControllerDelegate> {
     WordPressAppDelegate *appDelegate;
@@ -133,64 +134,65 @@
 
 
 - (IBAction)handleOrgBlogTapped:(id)sender {
-    /*
-    AddSiteViewController *addSiteView;
-    if(IS_IPAD == YES) {
-        addSiteView = [[AddSiteViewController alloc] initWithNibName:@"AddSiteViewController-iPad" bundle:nil];
-    } else {
-        addSiteView = [[AddSiteViewController alloc] initWithNibName:@"AddSiteViewController" bundle:nil];
-    }
-    
-    [self.navigationController pushViewController:addSiteView animated:YES];
-    [addSiteView release];*/
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        AddSiteViewController *addSiteView;
+        if(IS_IPAD == YES) {
+            addSiteView = [[AddSiteViewController alloc] initWithNibName:@"AddSiteViewController-iPad" bundle:nil];
+        } else {
+            addSiteView = [[AddSiteViewController alloc] initWithNibName:@"AddSiteViewController" bundle:nil];
+        }
+        
+        [self.navigationController pushViewController:addSiteView animated:YES];
+        [addSiteView release];
+    });
 }
 
 
 - (IBAction)handleAddBlogTapped:(id)sender {
-    /*NSString *username = nil;
-    NSString *password = nil;
-    
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"] != nil) {
-        NSError *error = nil;
-        username = [[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"];
-        password = [SFHFKeychainUtils getPasswordForUsername:username
-                                              andServiceName:@"WordPress.com"
-                                                       error:&error];
-    }
-    
-    if(appDelegate.isWPcomAuthenticated) {
-        AddUsersBlogsViewController *addUsersBlogsView;
-        if (IS_IPAD == YES)
-            addUsersBlogsView = [[AddUsersBlogsViewController alloc] initWithNibName:@"AddUsersBlogsViewController-iPad" bundle:nil];
-        else
-            addUsersBlogsView = [[AddUsersBlogsViewController alloc] initWithNibName:@"AddUsersBlogsViewController" bundle:nil];
-        addUsersBlogsView.isWPcom = YES;
-        [addUsersBlogsView setUsername:username];
-        [addUsersBlogsView setPassword:password];
-        [self.navigationController pushViewController:addUsersBlogsView animated:YES];
-        [addUsersBlogsView release];
-    }
-    else {
-        WPcomLoginViewController *wpLoginView = [[WPcomLoginViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        wpLoginView.delegate = self;
-        [self.navigationController pushViewController:wpLoginView animated:YES];
-        [wpLoginView release];
-    }*/
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        NSString *username = nil;
+        NSString *password = nil;
+        
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"] != nil) {
+            NSError *error = nil;
+            username = [[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"];
+            password = [SFHFKeychainUtils getPasswordForUsername:username
+                                                  andServiceName:@"WordPress.com"
+                                                           error:&error];
+        }
+        
+        if(appDelegate.isWPcomAuthenticated) {
+            AddUsersBlogsViewController *addUsersBlogsView;
+            if (IS_IPAD == YES)
+                addUsersBlogsView = [[AddUsersBlogsViewController alloc] initWithNibName:@"AddUsersBlogsViewController-iPad" bundle:nil];
+            else
+                addUsersBlogsView = [[AddUsersBlogsViewController alloc] initWithNibName:@"AddUsersBlogsViewController" bundle:nil];
+            addUsersBlogsView.isWPcom = YES;
+            [addUsersBlogsView setUsername:username];
+            [addUsersBlogsView setPassword:password];
+            [self.navigationController pushViewController:addUsersBlogsView animated:YES];
+            [addUsersBlogsView release];
+        }
+        else {
+            WPcomLoginViewController *wpLoginView = [[WPcomLoginViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            wpLoginView.delegate = self;
+            [self.navigationController pushViewController:wpLoginView animated:YES];
+            [wpLoginView release];
+        }
+    });
 }
 
 
 - (IBAction)handleCreateBlogTapped:(id)sender {
-    /*
-    NSString *newNibName = @"WebSignupViewController";
-    if(IS_IPAD == YES)
-        newNibName = @"WebSignupViewController-iPad";
-    WebSignupViewController *webSignup = [[WebSignupViewController alloc] initWithNibName:newNibName bundle:[NSBundle mainBundle]];
-    [self.navigationController pushViewController:webSignup animated:YES];
-    [webSignup release];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wpcomSignupNotificationReceived:) name:@"wpcomSignupNotification" object:nil];*/
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        NSString *newNibName = @"WebSignupViewController";
+        if(IS_IPAD == YES)
+            newNibName = @"WebSignupViewController-iPad";
+        WebSignupViewController *webSignup = [[WebSignupViewController alloc] initWithNibName:newNibName bundle:[NSBundle mainBundle]];
+        [self.navigationController pushViewController:webSignup animated:YES];
+        [webSignup release];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wpcomSignupNotificationReceived:) name:@"wpcomSignupNotification" object:nil];
+    });
 }
 
 

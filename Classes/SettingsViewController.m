@@ -35,6 +35,7 @@
 #import "UIImageView+Gravatar.h"
 #import "WordPressComApi.h"
 #import "AboutViewController.h"
+#import "WPDemo.h"
 
 typedef enum {
     SettingsSectionBlogs = 0,
@@ -100,7 +101,11 @@ typedef enum {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self checkCloseButton];
-    self.editButtonItem.enabled = NO;
+    WPDEMO_ONLY(^{
+        self.editButtonItem.enabled = NO;
+    }, ^{
+        self.editButtonItem.enabled = ([[self.resultsController fetchedObjects] count] > 0); // Disable if we have no blogs. ;
+    });
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -141,7 +146,8 @@ typedef enum {
         case SettingsSectionBlogsAdd:
             return 1;
         case SettingsSectionWpcom:
-            return 1;
+            WPDEMO_RETURN(1);
+            return [WordPressComApi sharedApi].username ? 2 : 1;
         case SettingsSectionInfo:
             return 2;
         default:
