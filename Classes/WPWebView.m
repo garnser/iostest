@@ -8,6 +8,7 @@
 #import "Reachability.h"
 #import "AFHTTPRequestOperation.h"
 #import "WordPressAppDelegate.h"
+#import "WPDemo.h"
 
 NSString *refreshedWithOutValidRequestNotification = @"refreshedWithOutValidRequestNotification";
 
@@ -501,9 +502,22 @@ NSString *refreshedWithOutValidRequestNotification = @"refreshedWithOutValidRequ
     if (currentRequest == nil) {
         // If we pull to refresh when a string or data was loaded then it is the resposibility of the
         // loading object to refresh the content.
+        if (loading) {
+            return;
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:refreshedWithOutValidRequestNotification object:self userInfo:nil];
+        
+        WPDEMO_ONLY(^{
+            int64_t delayInSeconds = 1.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [self hideRefreshingState];
+            });
+        }, NULL);
+        
         return;
     }
+    
     if (loading) return; //loop breaker.
     [self reload];
 }

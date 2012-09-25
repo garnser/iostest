@@ -266,12 +266,14 @@
 		5D2B629115EBF7FF0053361D /* JetpackSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D2B628D15EBF7FF0053361D /* JetpackSettingsViewController.xib */; };
 		5D2B80D11592447200161F6E /* QuickPhotoButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B80D01592447200161F6E /* QuickPhotoButtonView.m */; };
 		5D48D040160A679700FC4C63 /* UINavigationController+Rotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D48D03F160A679700FC4C63 /* UINavigationController+Rotation.m */; };
+		5D4C9A27161232C7007FB3AA /* demo-stats.html in Resources */ = {isa = PBXBuildFile; fileRef = 5D4C9A03161232C7007FB3AA /* demo-stats.html */; };
 		5D7C22B615A4FCFE00FCE1C2 /* down_dim.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D7C22B215A4FCC200FCE1C2 /* down_dim.png */; };
 		5D7C22B715A4FCFE00FCE1C2 /* down_dim@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D7C22B315A4FCCE00FCE1C2 /* down_dim@2x.png */; };
 		5D7C22B815A4FCFE00FCE1C2 /* up_dim.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D7C22B415A4FCDE00FCE1C2 /* up_dim.png */; };
 		5D7C22B915A4FCFE00FCE1C2 /* up_dim@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D7C22B515A4FCE900FCE1C2 /* up_dim@2x.png */; };
 		5D86498515A6459C00A64FB0 /* welcome_bg_pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D86498315A6459C00A64FB0 /* welcome_bg_pattern.png */; };
 		5D86498615A6459C00A64FB0 /* welcome_bg_pattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D86498415A6459C00A64FB0 /* welcome_bg_pattern@2x.png */; };
+		5D8824F51612436400784D0A /* demo-stats in Resources */ = {isa = PBXBuildFile; fileRef = 5D8824F41612436400784D0A /* demo-stats */; };
 		5D97C2F315CAF8D8009B44DD /* UINavigationController+KeyboardFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D97C2F215CAF8D8009B44DD /* UINavigationController+KeyboardFix.m */; };
 		5D9832EC15A77F0700A5E783 /* toolbar_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9832EA15A77ED900A5E783 /* toolbar_bg.png */; };
 		5D9832ED15A77F0700A5E783 /* toolbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D9832EB15A77EEF00A5E783 /* toolbar_bg@2x.png */; };
@@ -920,12 +922,14 @@
 		5D2B80D01592447200161F6E /* QuickPhotoButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuickPhotoButtonView.m; sourceTree = "<group>"; };
 		5D48D03E160A679700FC4C63 /* UINavigationController+Rotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Rotation.h"; sourceTree = "<group>"; };
 		5D48D03F160A679700FC4C63 /* UINavigationController+Rotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Rotation.m"; sourceTree = "<group>"; };
+		5D4C9A03161232C7007FB3AA /* demo-stats.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "demo-stats.html"; sourceTree = "<group>"; };
 		5D7C22B215A4FCC200FCE1C2 /* down_dim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down_dim.png; sourceTree = "<group>"; };
 		5D7C22B315A4FCCE00FCE1C2 /* down_dim@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down_dim@2x.png"; sourceTree = "<group>"; };
 		5D7C22B415A4FCDE00FCE1C2 /* up_dim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_dim.png; sourceTree = "<group>"; };
 		5D7C22B515A4FCE900FCE1C2 /* up_dim@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "up_dim@2x.png"; sourceTree = "<group>"; };
 		5D86498315A6459C00A64FB0 /* welcome_bg_pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_bg_pattern.png; sourceTree = "<group>"; };
 		5D86498415A6459C00A64FB0 /* welcome_bg_pattern@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_bg_pattern@2x.png"; sourceTree = "<group>"; };
+		5D8824F41612436400784D0A /* demo-stats */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "demo-stats"; sourceTree = "<group>"; };
 		5D97C2F115CAF8D8009B44DD /* UINavigationController+KeyboardFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+KeyboardFix.h"; sourceTree = "<group>"; };
 		5D97C2F215CAF8D8009B44DD /* UINavigationController+KeyboardFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+KeyboardFix.m"; sourceTree = "<group>"; };
 		5D9832EA15A77ED900A5E783 /* toolbar_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toolbar_bg.png; sourceTree = "<group>"; };
@@ -1807,6 +1811,8 @@
 		3792259E12F6DBCC00F2176A /* Stats */ = {
 			isa = PBXGroup;
 			children = (
+				5D8824F41612436400784D0A /* demo-stats */,
+				5D4C9A03161232C7007FB3AA /* demo-stats.html */,
 				5D2B628915EBF7FF0053361D /* JetpackAuthUtil.h */,
 				5D2B628A15EBF7FF0053361D /* JetpackAuthUtil.m */,
 				5D2B628B15EBF7FF0053361D /* JetpackSettingsViewController.h */,
@@ -3340,6 +3346,8 @@
 				5D2B629115EBF7FF0053361D /* JetpackSettingsViewController.xib in Resources */,
 				A2A14DED1603AA6D0005D358 /* Default-568h@2x.png in Resources */,
 				375EC3D91611B2CA009AE290 /* WordPress.sqlite in Resources */,
+				5D4C9A27161232C7007FB3AA /* demo-stats.html in Resources */,
+				5D8824F51612436400784D0A /* demo-stats in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3648,6 +3656,7 @@
 				PRODUCT_NAME = WordPress;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSION_INFO_BUILDER = "Eric Johnson";
 			};
 			name = Debug;
 		};
@@ -3684,6 +3693,7 @@
 				PROVISIONING_PROFILE = "F932D8CB-EF0B-4A00-A7A5-D787223BC841";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSION_INFO_BUILDER = "Eric Johnson";
 			};
 			name = Release;
 		};
@@ -3744,6 +3754,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSION_INFO_BUILDER = "Eric Johnson";
 			};
 			name = Distribution;
 		};
@@ -3805,6 +3816,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSION_INFO_BUILDER = "Eric Johnson";
 			};
 			name = Beta;
 		};

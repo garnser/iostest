@@ -221,43 +221,50 @@ static NSString *_lastAuthedName = nil;
 
 - (void)initStats {
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
-    BOOL prompt = NO;
-	if ([[blog blogID] isEqualToNumber:[NSNumber numberWithInt:1]]) {
-		// This is a .org blog and we need to look up the blog id assigned by Jetpack.
-        NSString *username = [JetpackAuthUtil getJetpackUsernameForBlog:blog];
-        NSString *password = [JetpackAuthUtil getJetpackPasswordForBlog:blog];
+    
+    WPDEMO_ONLY(^{
+        [self loadStats];
+    }, ^{
+    
+        BOOL prompt = NO;
+        if ([[blog blogID] isEqualToNumber:[NSNumber numberWithInt:1]]) {
+            // This is a .org blog and we need to look up the blog id assigned by Jetpack.
+            NSString *username = [JetpackAuthUtil getJetpackUsernameForBlog:blog];
+            NSString *password = [JetpackAuthUtil getJetpackPasswordForBlog:blog];
 
-        if ([username length] > 0 && [password length] > 0) {
-            // try to validate
-            if (!jetpackAuthUtil) {
-                self.jetpackAuthUtil = [[[JetpackAuthUtil alloc] init] autorelease];
-                jetpackAuthUtil.delegate = self;
+            if ([username length] > 0 && [password length] > 0) {
+                // try to validate
+                if (!jetpackAuthUtil) {
+                    self.jetpackAuthUtil = [[[JetpackAuthUtil alloc] init] autorelease];
+                    jetpackAuthUtil.delegate = self;
+                }
+                [jetpackAuthUtil validateCredentialsForBlog:blog withUsername:username andPassword:password];
+
+            } else {
+                prompt = YES;
+                
             }
-            [jetpackAuthUtil validateCredentialsForBlog:blog withUsername:username andPassword:password];
-
-        } else {
-            prompt = YES;
             
+        } else if(![blog isWPcom] && [JetpackAuthUtil getJetpackUsernameForBlog:blog] == nil) {
+            // self-hosted blog and no associated .com login.
+            prompt = YES;
+        } else {
+            [self loadStats];
+        }
+        if (prompt) {
+            NSString *msg = kNeedJetpackLogIn;
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Jetpack Needed" 
+                                                                message:msg 
+                                                               delegate:nil 
+                                                      cancelButtonTitle:NSLocalizedString(@"OK", @"OK") 
+                                                      otherButtonTitles:nil, nil];
+            [alertView show];
+            [alertView release];
+            
+            [self promptForCredentials];
         }
         
-	} else if(![blog isWPcom] && [JetpackAuthUtil getJetpackUsernameForBlog:blog] == nil) {
-        // self-hosted blog and no associated .com login.
-        prompt = YES;
-    } else {
-        [self loadStats];
-	}
-    if (prompt) {
-        NSString *msg = kNeedJetpackLogIn;
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Jetpack Needed" 
-                                                            message:msg 
-                                                           delegate:nil 
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", @"OK") 
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
-        [alertView release];
-        
-        [self promptForCredentials];
-    }
+    });
 }
 
 
@@ -274,6 +281,12 @@ static NSString *_lastAuthedName = nil;
 
 - (void)authStats {
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
+
+    WPDEMO_ONLY(^{
+        authed = YES;
+    }, nil);
+    
+    
     if (authed) {
         [self loadStats];
         return;
@@ -373,14 +386,27 @@ static NSString *_lastAuthedName = nil;
         return;
     }
     
-    NSString *pathStr = [NSString stringWithFormat:@"http://wordpress.com/?no-chrome#!/my-stats/?blog=%@&unit=1", [blog blogID]];
-    NSMutableURLRequest *mRequest = [[[NSMutableURLRequest alloc] init] autorelease];
-    [mRequest setURL:[NSURL URLWithString:pathStr]];
-    [mRequest addValue:@"*/*" forHTTPHeaderField:@"Accept"];
-    NSString *userAgent = [NSString stringWithFormat:@"%@",[webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"]];
-    [mRequest addValue:userAgent forHTTPHeaderField:@"User-Agent"];
     
-    [webView loadRequest:mRequest];
+    WPDEMO_ONLY(^{
+        NSString *pathStr = [[NSBundle mainBundle] pathForResource:@"demo-stats" ofType:@"html"];
+        NSError *error = nil;
+        NSString *html = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:pathStr] encoding:NSUTF8StringEncoding error:&error];
+        
+        [webView loadHTMLString:html baseURL:[[NSBundle mainBundle] bundleURL]];
+
+
+
+    }, ^{
+    
+        NSString *pathStr = [NSString stringWithFormat:@"http://wordpress.com/?no-chrome#!/my-stats/?blog=%@&unit=1", [blog blogID]];
+        NSMutableURLRequest *mRequest = [[[NSMutableURLRequest alloc] init] autorelease];
+        [mRequest setURL:[NSURL URLWithString:pathStr]];
+        [mRequest addValue:@"*/*" forHTTPHeaderField:@"Accept"];
+        NSString *userAgent = [NSString stringWithFormat:@"%@",[webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"]];
+        [mRequest addValue:userAgent forHTTPHeaderField:@"User-Agent"];
+        
+        [webView loadRequest:mRequest];
+    });
 }
 
 

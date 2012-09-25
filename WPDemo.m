@@ -10,7 +10,10 @@ void WPDEMO_ONLY(void (^demoBlock)(void), void (^regularBlock)(void)) {
     if (getenv("WPDEMO")) {
         demoBlock();
     } else {
-        regularBlock();
+        if (regularBlock) {
+            regularBlock();
+        }
+//        regularBlock();
     }
 }
 
