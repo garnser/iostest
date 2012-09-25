@@ -1,6 +1,7 @@
 #import "PostPreviewViewController.h"
 #import "WordPressAppDelegate.h"
 #import "NSString+Helpers.h"
+#import "FileLogger.h"
 
 @interface PostPreviewViewController (Private)
 
@@ -45,7 +46,7 @@
         activityFooter.hidesWhenStopped = YES;
         activityFooter.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     }	
-	
+	   
 	[self.view addSubview:activityFooter];
 }
 
@@ -207,6 +208,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)awebView {
 	[activityFooter stopAnimating];
+    [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none';"];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -215,6 +217,10 @@
 }
 
 - (BOOL)webView:(UIWebView *)awebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if (navigationType == UIWebViewNavigationTypeLinkClicked || navigationType == UIWebViewNavigationTypeFormSubmitted) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
+        return NO;
+    }
     return YES;
     //return isWebRefreshRequested || postDetailViewController.navigationItem.rightBarButtonItem != nil;
 }
