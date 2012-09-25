@@ -4,6 +4,7 @@
 #import "CPopoverManager.h"
 #import "NSString+XMLExtensions.h"
 #import "WPPopoverBackgroundView.h"
+#import "WPDemo.h"
 
 NSTimeInterval kAnimationDuration = 0.3f;
 
@@ -442,10 +443,12 @@ NSTimeInterval kAnimationDuration = 0.3f;
 }
 
 - (IBAction)switchToMedia {
-    if (currentView != postMediaViewController.view) {
-        [self switchToView:postMediaViewController.view];
-    }
-	self.navigationItem.title = NSLocalizedString(@"Media", @"Post Editor / Media screen title.");
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        if (currentView != postMediaViewController.view) {
+            [self switchToView:postMediaViewController.view];
+        }
+        self.navigationItem.title = NSLocalizedString(@"Media", @"Post Editor / Media screen title.");
+    });
 }
 
 - (IBAction)switchToPreview {
@@ -456,11 +459,15 @@ NSTimeInterval kAnimationDuration = 0.3f;
 }
 
 - (IBAction)addVideo:(id)sender {
-    [postMediaViewController showVideoPickerActionSheet:sender];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        [postMediaViewController showVideoPickerActionSheet:sender];
+    });
 }
 
 - (IBAction)addPhoto:(id)sender {
-    [postMediaViewController showPhotoPickerActionSheet:sender];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        [postMediaViewController showPhotoPickerActionSheet:sender];
+    });
 }
 
 - (IBAction)showCategories:(id)sender {

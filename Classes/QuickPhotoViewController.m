@@ -13,6 +13,7 @@
 #import "Media.h"
 #import "CameraPlusPickerManager.h"
 #import "WPPopoverBackgroundView.h"
+#import "WPDemo.h"
 
 @interface QuickPhotoViewController () {
     UIPopoverController *popController;
@@ -219,36 +220,38 @@
 }
 
 - (void)post {
-    Blog *blog = self.blogSelector.activeBlog;
-    Media *media = nil;
-    if (post == nil) {
-        post = [Post newDraftForBlog:blog];
-    } else {
-        post.blog = blog;
-        media = [post.media anyObject];
-        [media setBlog:blog];
-    }
-    post.postTitle = titleTextField.text;
-    post.content = contentTextView.text;
-    if (self.isCameraPlus) {
-        post.specialType = @"QuickPhotoCameraPlus";
-    } else {
-        post.specialType = @"QuickPhoto";
-    }
-    post.postFormat = @"image";
-    
-    [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:media];        
-    [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:media];
-    
-    appDelegate.isUploadingPost = YES;
-    
-    dispatch_async(dispatch_get_main_queue(), ^(void) {
-        [media uploadWithSuccess:nil failure:nil];
-        [post save];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        Blog *blog = self.blogSelector.activeBlog;
+        Media *media = nil;
+        if (post == nil) {
+            post = [Post newDraftForBlog:blog];
+        } else {
+            post.blog = blog;
+            media = [post.media anyObject];
+            [media setBlog:blog];
+        }
+        post.postTitle = titleTextField.text;
+        post.content = contentTextView.text;
+        if (self.isCameraPlus) {
+            post.specialType = @"QuickPhotoCameraPlus";
+        } else {
+            post.specialType = @"QuickPhoto";
+        }
+        post.postFormat = @"image";
+        
+        [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaDidUploadSuccessfully:) name:ImageUploadSuccessful object:media];        
+        [[NSNotificationCenter defaultCenter] addObserver:post selector:@selector(mediaUploadFailed:) name:ImageUploadFailed object:media];
+        
+        appDelegate.isUploadingPost = YES;
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [media uploadWithSuccess:nil failure:nil];
+            [post save];
+        });
+        
+        [self dismiss];
+        [sidebarViewController uploadQuickPhoto:post];
     });
-    
-    [self dismiss];
-    [sidebarViewController uploadQuickPhoto:post];
 }
 
 - (void)dismiss {
