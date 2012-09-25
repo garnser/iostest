@@ -9,6 +9,7 @@
 #import "WPReaderTopicsViewController.h"
 #import "WordPressAppDelegate.h"
 #import "WPFriendFinderViewController.h"
+#import "WPDemo.h"
 
 @implementation WPReaderTopicsViewController
 
@@ -57,11 +58,12 @@
 
 
 - (void)enableFriendFinder {
-    NSLog(@"Enable the Friend Finder");
+    WPDEMO_RETURN();
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.enableFriendFinder()"];
 }
 
 - (void)openFriendFinder {
+    WPDEMO_RETURN();
     WPFriendFinderViewController *friendFinder = [[WPFriendFinderViewController alloc] initWithNibName:@"WPReaderViewController" bundle:nil];
     [self.navigationController pushViewController:friendFinder animated:YES];
     [friendFinder release];

@@ -13,6 +13,8 @@
 #import "SFHFKeychainUtils.h"
 #import "JSONKit.h"
 
+#import "WPDemo.h"
+
 #ifdef DEBUG
 #define kReaderRefreshThreshold 10*60 // 10min
 #else
@@ -541,14 +543,15 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
     [super webViewDidFinishLoad:aWebView];
 }
 
-#pragma mark -- Friend Finder Button
+#pragma mark - Friend Finder Button
 
 
 - (BOOL) shouldDisplayfriendFinderNudgeView {
+    
     #ifdef DEBUG
     return self.friendFinderNudgeView == nil;
     #endif
-
+    WPDEMO_RETURN(NO);
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     return ![userDefaults boolForKey:WPReaderViewControllerDisplayedFriendFinder] && self.friendFinderNudgeView == nil;
 }
@@ -614,7 +617,7 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 
 }
 
-#pragma mark -- View Overrides
+#pragma mark - View Overrides
 
 - (void)setTitle:(NSString *)title {
     
