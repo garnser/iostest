@@ -14,6 +14,7 @@
 #import "FileLogger.h"
 #import "AFNetworkActivityIndicatorManager.h"
 #import "UIColor+Helpers.h"
+#import "WPDemo.h"
 
 @interface WordPressAppDelegate (Private)
 - (void)setAppBadge;
@@ -129,7 +130,11 @@ static WordPressAppDelegate *wordPressApp = NULL;
 		NSLog(@"NSZombieEnabled!");
 	else if(getenv("NSAutoreleaseFreedObjectCheckEnabled"))
 		NSLog(@"NSAutoreleaseFreedObjectCheckEnabled enabled!");
-
+    
+    WPDEMO_ONLY(^{ 
+        [[NSUserDefaults standardUserDefaults] setObject:WPDEMO_USERNAME forKey:@"wpcom_username_preference"];
+    }, ^{});
+    
 	// Set current directory for WordPress app
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
