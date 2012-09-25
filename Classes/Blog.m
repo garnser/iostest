@@ -14,6 +14,7 @@
 #import "UIImage+Resize.h"
 #import "NSURL+IDN.h"
 #import "NSString+XMLExtensions.h"
+#import "WPDemo.h"
 
 @interface Blog (PrivateMethods)
 - (AFXMLRPCRequestOperation *)operationForOptionsWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure;
@@ -371,8 +372,19 @@
     }
     self.isSyncingPosts = YES;
 
-    AFXMLRPCRequestOperation *operation = [self operationForPostsWithSuccess:success failure:failure loadMore:more];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+    WPDEMO_ONLY(^{
+        self.isSyncingPosts = NO;
+        WPDEMO_ONLY(^{
+            int64_t delayInSeconds = 1.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                if (success) success();
+            });
+        }, nil);
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForPostsWithSuccess:success failure:failure loadMore:more];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (NSArray *)syncedPages {
@@ -385,18 +397,38 @@
         return;
     }
     self.isSyncingPages = YES;
-    AFXMLRPCRequestOperation *operation = [self operationForPagesWithSuccess:success failure:failure loadMore:more];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+    
+    WPDEMO_ONLY(^{
+        self.isSyncingPages = NO;
+        WPDEMO_ONLY(^{
+            int64_t delayInSeconds = 1.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                if (success) success();
+            });
+        }, nil);
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForPagesWithSuccess:success failure:failure loadMore:more];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (void)syncCategoriesWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
-    AFXMLRPCRequestOperation *operation = [self operationForCategoriesWithSuccess:success failure:failure];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+    WPDEMO_ONLY(^{
+        if (success) success();
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForCategoriesWithSuccess:success failure:failure];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (void)syncOptionsWithWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
-    AFXMLRPCRequestOperation *operation = [self operationForOptionsWithSuccess:success failure:failure];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+    WPDEMO_ONLY(^{
+        if (success) success();
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForOptionsWithSuccess:success failure:failure];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (id)getOptionValue:(NSString *) name {
@@ -413,16 +445,34 @@
         return;
     }
     self.isSyncingComments = YES;
-    AFXMLRPCRequestOperation *operation = [self operationForCommentsWithSuccess:success failure:failure];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+
+    WPDEMO_ONLY(^{
+        self.isSyncingComments = NO;
+        WPDEMO_ONLY(^{
+            int64_t delayInSeconds = 1.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                if (success) success();
+            });
+        }, nil);
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForCommentsWithSuccess:success failure:failure];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (void)syncPostFormatsWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
-    AFXMLRPCRequestOperation *operation = [self operationForPostFormatsWithSuccess:success failure:failure];
-    [self.api enqueueXMLRPCRequestOperation:operation];
+    WPDEMO_ONLY(^{
+        if (success) success();
+    }, ^{
+        AFXMLRPCRequestOperation *operation = [self operationForPostFormatsWithSuccess:success failure:failure];
+        [self.api enqueueXMLRPCRequestOperation:operation];
+    });
 }
 
 - (void)syncBlogWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
+    WPDEMO_RETURN();
+
     AFXMLRPCRequestOperation *operation;
     NSMutableArray *operations = [NSMutableArray arrayWithCapacity:6];
     operation = [self operationForOptionsWithSuccess:nil failure:nil];
@@ -460,6 +510,15 @@
 }
 
 - (void)syncBlogPostsWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
+    WPDEMO_ONLY(^{
+        int64_t delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            if (success) success();
+        });
+    }, nil);
+    WPDEMO_RETURN();
+
     AFXMLRPCRequestOperation *operation;
     NSMutableArray *operations = [NSMutableArray arrayWithCapacity:4];
     operation = [self operationForOptionsWithSuccess:nil failure:nil];
