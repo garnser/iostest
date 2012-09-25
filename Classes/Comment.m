@@ -148,7 +148,13 @@
    
     WPDEMO_ONLY(^{
         if ( ! self.commentID) {
-            self.commentID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
+            //generate a random commentID
+            while ( self.commentID == nil ) {
+               NSNumber *tmpID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
+                NSSet *results = [self.blog.comments filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"commentID == %@", tmpID]];
+                if ( ! results || ( results && results.count == 0 ))
+                    self.commentID = tmpID;
+            }            
         }
         [self save];
         double delayInSeconds = 2.0;
