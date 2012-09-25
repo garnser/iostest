@@ -467,12 +467,14 @@
                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"")
                                         destructiveButtonTitle:nil
                                              otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),NSLocalizedString(@"Add Photo from Camera+", @""), NSLocalizedString(@"Take Photo with Camera+", @""),nil];
+            actionSheet.tag = 100;
         } else {
             actionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                                       delegate:self
                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"")
                                         destructiveButtonTitle:nil
                                              otherButtonTitles:NSLocalizedString(@"Add Photo from Library", @""),NSLocalizedString(@"Take Photo", @""),nil];
+            actionSheet.tag = 200;
         }
 	} else {
         [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary useCameraPlus:NO withImage:nil];
@@ -616,15 +618,27 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     self.quickPhotoActionSheet = nil;
-    if(buttonIndex == 0) {
-        [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary];
-    } else if(buttonIndex == 1) {
-        [self showQuickPhoto:UIImagePickerControllerSourceTypeCamera];
-    } else if(buttonIndex == 2) {
-        [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary useCameraPlus:YES];
-    } else if(buttonIndex == 3) {
-        [self showQuickPhoto:UIImagePickerControllerSourceTypeCamera useCameraPlus:YES];
-    }
+    WPDEMO_ONLY(^{
+        //demo app without Camera plus
+        if( actionSheet.tag == 200 ) {
+            if(buttonIndex == 0) {
+                [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary];
+            } else if(buttonIndex == 1) {
+                [self showQuickPhoto:UIImagePickerControllerSourceTypeCamera];
+            } else
+                return;
+        }
+    }, ^{
+        if(buttonIndex == 0) {
+            [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary];
+        } else if(buttonIndex == 1) {
+            [self showQuickPhoto:UIImagePickerControllerSourceTypeCamera];
+        } else if(buttonIndex == 2) {
+            [self showQuickPhoto:UIImagePickerControllerSourceTypePhotoLibrary useCameraPlus:YES];
+        } else if(buttonIndex == 3) {
+            [self showQuickPhoto:UIImagePickerControllerSourceTypeCamera useCameraPlus:YES];
+        }
+    });
 }
 
 
