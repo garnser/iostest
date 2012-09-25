@@ -154,6 +154,9 @@
                 NSSet *results = [self.blog.comments filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"commentID == %@", tmpID]];
                 if ( ! results || ( results && results.count == 0 ))
                     self.commentID = tmpID;
+                self.author_url = @"http://ios.wordpress.com";
+                self.author = @"Mr iOS";
+                self.author_email = @"ios-demo@wordpress.org";
             }            
         }
         [self save];
