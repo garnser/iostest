@@ -601,6 +601,7 @@ Vendor/xmlrpc/XMLRPCResponse.m -text
 /WPCategoriesController.xib -text
 /WPComOAuthController.xib -text
 /WPDemo.h -text
+/WPDemo.m -text
 /WPReaderViewController.xib -text
 /WPSelectionTableViewController.xib -text
 /WPWebViewController-iPad.xib -text

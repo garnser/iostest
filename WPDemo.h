@@ -6,18 +6,13 @@
 //  Copyright (c) 2012 WordPress. All rights reserved.
 //
 
-void WPDEMO_ONLY(void (^demoBlock)(void), void (^regularBlock)(void)) {
-    if (getenv("WPDEMO")) {
-        demoBlock();
-    } else {
-        regularBlock();
-    }
-}
+#ifndef __WPDEMO_H
+#define __WPDEMO_H
 
-void WPDEMO_FEATURE_UNAVAILABLE(void (^regularBlock)(void)) {
-    WPDEMO_ONLY(^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
-    }, regularBlock);
-}
+void WPDEMO_ONLY(void (^demoBlock)(void), void (^regularBlock)(void));
+
+void WPDEMO_FEATURE_UNAVAILABLE(void (^regularBlock)(void));
 
 #define WPDEMO_RETURN(val) if (getenv("WPDEMO")) return val;
+
+#endif
