@@ -353,28 +353,32 @@ static WordPressAppDelegate *wordPressApp = NULL;
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
     
     //Keep the app alive in the background if we are uploading a post, currently only used for quick photo posts
-    UIApplication *app = [UIApplication sharedApplication];
-    if (!isUploadingPost && [app respondsToSelector:@selector(endBackgroundTask:)]) {
-        if (bgTask != UIBackgroundTaskInvalid) {
-            [app endBackgroundTask:bgTask];
-            bgTask = UIBackgroundTaskInvalid;
-        }
-    }
+    /*UIApplication *app = [UIApplication sharedApplication];
+     if (!isUploadingPost && [app respondsToSelector:@selector(endBackgroundTask:)]) {
+     if (bgTask != UIBackgroundTaskInvalid) {
+     [app endBackgroundTask:bgTask];
+     bgTask = UIBackgroundTaskInvalid;
+     }
+     }
+     
+     if ([app respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
+     bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+     // Synchronize the cleanup call on the main thread in case
+     // the task actually finishes at around the same time.
+     dispatch_async(dispatch_get_main_queue(), ^{
+     if (bgTask != UIBackgroundTaskInvalid)
+     {
+     [app endBackgroundTask:bgTask];
+     bgTask = UIBackgroundTaskInvalid;
+     }
+     });
+     }];
+     }*/
     
-    if ([app respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
-        bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
-            // Synchronize the cleanup call on the main thread in case
-            // the task actually finishes at around the same time.
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (bgTask != UIBackgroundTaskInvalid)
-                {
-                    [app endBackgroundTask:bgTask];
-                    bgTask = UIBackgroundTaskInvalid;
-                }
-            });
-        }];
-    }
-
+    // The Demo app clears its DB every time it exits
+    NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"WordPress.sqlite"];
+    [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
+    
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         WPFLog(@"Unresolved Core Data Save error %@, %@", error, [error userInfo]);
@@ -383,7 +387,7 @@ static WordPressAppDelegate *wordPressApp = NULL;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];    
+    [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
   
     if (passwordAlertRunning && passwordTextField != nil)
         [passwordTextField resignFirstResponder];
@@ -615,11 +619,43 @@ static WordPressAppDelegate *wordPressApp = NULL;
     return managedObjectModel_;
 }
 
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+	
+    /* The Demo App uses an included .sqlite file to pre-populate the db */
+    
+    if (persistentStoreCoordinator_ != nil) {
+        return persistentStoreCoordinator_;
+    }
+    
+	NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"WordPress.sqlite"];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // If the expected store doesn't exist, copy the default store.
+    if (![fileManager fileExistsAtPath:storePath]) {
+        NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"WordPress" ofType:@"sqlite"];
+        if (defaultStorePath) {
+            [fileManager copyItemAtPath:defaultStorePath toPath:storePath error:NULL];
+        }
+    }
+    
+    NSURL *storeUrl = [NSURL fileURLWithPath:storePath];
+    
+    NSError *error;
+    persistentStoreCoordinator_ = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    if (![persistentStoreCoordinator_ addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:nil error:&error]) {
+        // Handle error
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+    
+    return persistentStoreCoordinator_;
+}
+
 /**
  Returns the persistent store coordinator for the application.
  If the coordinator doesn't already exist, it is created and the application's store added to it.
  */
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+/*- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     
     if (persistentStoreCoordinator_ != nil) {
         return persistentStoreCoordinator_;
@@ -739,7 +775,7 @@ static WordPressAppDelegate *wordPressApp = NULL;
 	[[FileLogger sharedInstance] flush];
     
     return persistentStoreCoordinator_;
-}
+}*/
 
 
 #pragma mark -

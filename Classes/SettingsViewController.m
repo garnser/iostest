@@ -11,20 +11,20 @@
  Settings contents:
  
  - Blogs list
-    - Add blog
-    - Edit/Delete
+ - Add blog
+ - Edit/Delete
  - WordPress.com account
-    - Sign out / Sign in
+ - Sign out / Sign in
  - Media Settings
-    - Image Resize
-    - Video API
-    - Video Quality
-    - Video Content
+ - Image Resize
+ - Video API
+ - Video Quality
+ - Video Content
  - Info
-    - Version
-    - About
-    - Extra debug
-
+ - Version
+ - About
+ - Extra debug
+ 
  */
 
 #import "SettingsViewController.h"
@@ -40,7 +40,7 @@ typedef enum {
     SettingsSectionBlogs = 0,
     SettingsSectionBlogsAdd,
     SettingsSectionWpcom,
-//    SettingsSectionMedia,
+    //    SettingsSectionMedia,
     SettingsSectionInfo,
     
     SettingsSectionCount
@@ -60,7 +60,7 @@ typedef enum {
 - (void)dealloc
 {
     [_resultsController release];
-
+    
     [super dealloc];
 }
 
@@ -76,7 +76,7 @@ typedef enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     self.title = NSLocalizedString(@"Settings", @"App Settings");
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(dismiss)] autorelease];
@@ -100,7 +100,7 @@ typedef enum {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self checkCloseButton];
-    self.editButtonItem.enabled = ([[self.resultsController fetchedObjects] count] > 0); // Disable if we have no blogs.
+    self.editButtonItem.enabled = NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -117,7 +117,7 @@ typedef enum {
 - (void)checkCloseButton {
     if ([[self.resultsController fetchedObjects] count] == 0 && [WordPressComApi sharedApi].username == nil) {
         WelcomeViewController *welcomeViewController;
-        welcomeViewController = [[[WelcomeViewController alloc] initWithNibName:@"WelcomeViewController" bundle:nil] autorelease]; 
+        welcomeViewController = [[[WelcomeViewController alloc] initWithNibName:@"WelcomeViewController" bundle:nil] autorelease];
         [welcomeViewController automaticallyDismissOnLoginActions];
         self.navigationController.navigationBar.hidden = YES;
         [self.navigationController pushViewController:welcomeViewController animated:YES];
@@ -141,7 +141,7 @@ typedef enum {
         case SettingsSectionBlogsAdd:
             return 1;
         case SettingsSectionWpcom:
-            return [WordPressComApi sharedApi].username ? 2 : 1;
+            return 1;
         case SettingsSectionInfo:
             return 2;
         default:
@@ -258,39 +258,40 @@ typedef enum {
             [self setEditing:NO];
             self.editButtonItem.enabled = NO;
         }
-    }   
+    }
 }
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == SettingsSectionBlogs) {
-        Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
-
-		EditSiteViewController *editSiteViewController = [[[EditSiteViewController alloc] init] autorelease];
-        editSiteViewController.blog = blog;
-        [self.navigationController pushViewController:editSiteViewController animated:YES];
+        /*Blog *blog = [self.resultsController objectAtIndexPath:indexPath];
+         
+         EditSiteViewController *editSiteViewController = [[[EditSiteViewController alloc] init] autorelease];
+         editSiteViewController.blog = blog;
+         [self.navigationController pushViewController:editSiteViewController animated:YES];*/
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if (indexPath.section == SettingsSectionBlogsAdd) {
         WelcomeViewController *welcomeViewController;
-        welcomeViewController = [[[WelcomeViewController alloc] initWithNibName:@"WelcomeViewController" bundle:nil] autorelease]; 
+        welcomeViewController = [[[WelcomeViewController alloc] initWithNibName:@"WelcomeViewController" bundle:nil] autorelease];
         welcomeViewController.title = NSLocalizedString(@"Add a Blog", @"");
         [self.navigationController pushViewController:welcomeViewController animated:YES];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -301,8 +302,8 @@ typedef enum {
                 NSString *signOutTitle = NSLocalizedString(@"You are logged in as", @"");
                 signOutTitle = [NSString stringWithFormat:@"%@ %@", signOutTitle, [WordPressComApi sharedApi].username];
                 UIActionSheet *actionSheet;
-                actionSheet = [[UIActionSheet alloc] initWithTitle:signOutTitle 
-                                                          delegate:self 
+                actionSheet = [[UIActionSheet alloc] initWithTitle:signOutTitle
+                                                          delegate:self
                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", @"")
                                             destructiveButtonTitle:NSLocalizedString(@"Sign Out", @"")otherButtonTitles:nil, nil ];
                 actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
@@ -317,7 +318,7 @@ typedef enum {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if (indexPath.section == SettingsSectionInfo) {
         if (indexPath.row == 1) {
-            AboutViewController *aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutViewController" bundle:nil] autorelease]; 
+            AboutViewController *aboutViewController = [[[AboutViewController alloc] initWithNibName:@"AboutViewController" bundle:nil] autorelease];
             [self.navigationController pushViewController:aboutViewController animated:YES];
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
         }
@@ -330,7 +331,7 @@ typedef enum {
     if (_resultsController) {
         return _resultsController;
     }
-
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSManagedObjectContext *moc = [[WordPressAppDelegate sharedWordPressApp] managedObjectContext];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Blog" inManagedObjectContext:moc]];
@@ -339,12 +340,12 @@ typedef enum {
     // For some reasons, the cache sometimes gets corrupted
     // Since we don't really use sections we skip the cache here
     _resultsController = [[NSFetchedResultsController alloc]
-                                                      initWithFetchRequest:fetchRequest
-                                                      managedObjectContext:moc
-                                                      sectionNameKeyPath:nil
-                                                      cacheName:nil];
+                          initWithFetchRequest:fetchRequest
+                          managedObjectContext:moc
+                          sectionNameKeyPath:nil
+                          cacheName:nil];
     _resultsController.delegate = self;
-
+    
     NSError *error = nil;
     if (![_resultsController performFetch:&error]) {
         WPFLog(@"Couldn't fetch blogs: %@", [error localizedDescription]);

@@ -133,6 +133,7 @@
 
 
 - (IBAction)handleOrgBlogTapped:(id)sender {
+    /*
     AddSiteViewController *addSiteView;
     if(IS_IPAD == YES) {
         addSiteView = [[AddSiteViewController alloc] initWithNibName:@"AddSiteViewController-iPad" bundle:nil];
@@ -141,12 +142,13 @@
     }
     
     [self.navigationController pushViewController:addSiteView animated:YES];
-    [addSiteView release];
+    [addSiteView release];*/
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 
 - (IBAction)handleAddBlogTapped:(id)sender {
-    NSString *username = nil;
+    /*NSString *username = nil;
     NSString *password = nil;
     
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"] != nil) {
@@ -174,18 +176,21 @@
         wpLoginView.delegate = self;
         [self.navigationController pushViewController:wpLoginView animated:YES];
         [wpLoginView release];
-    }
+    }*/
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 
 - (IBAction)handleCreateBlogTapped:(id)sender {
+    /*
     NSString *newNibName = @"WebSignupViewController";
     if(IS_IPAD == YES)
         newNibName = @"WebSignupViewController-iPad";
     WebSignupViewController *webSignup = [[WebSignupViewController alloc] initWithNibName:newNibName bundle:[NSBundle mainBundle]];
     [self.navigationController pushViewController:webSignup animated:YES];
     [webSignup release];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wpcomSignupNotificationReceived:) name:@"wpcomSignupNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wpcomSignupNotificationReceived:) name:@"wpcomSignupNotification" object:nil];*/
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFeatureNotAvailableNotification object:nil];
 }
 
 
