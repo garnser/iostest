@@ -853,7 +853,16 @@
             return;
     }
     
-    self.currentIndexPath = indexPath;
+    WPDEMO_ONLY(^{
+        if (indexPath.row == 5)
+            [[self tableView] selectRowAtIndexPath:currentIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        else
+            self.currentIndexPath = indexPath;
+    }, ^{
+        self.currentIndexPath = indexPath;
+    });
+    
+    
     
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:indexPath.row], @"row", [NSNumber numberWithInteger:indexPath.section], @"section", nil];
     [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"kSelectedSidebarIndexDictionary"];
