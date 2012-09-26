@@ -10,7 +10,9 @@
 #import "WordPressAppDelegate.h"
 
 
-@implementation WPWebAppViewController
+@implementation WPWebAppViewController {
+    BOOL delegateRetained;
+}
 
 @synthesize webView, loading, lastWebViewRefreshDate, webBridge;
 
@@ -200,17 +202,23 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     // attempted work around for #1347
     [self.webView.delegate retain];
+    delegateRetained = YES;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     // attempted work around for #1347
-  [self.webView.delegate release];
-    
+    if (delegateRetained) {
+        [self.webView.delegate release];
+        delegateRetained = NO;
+    }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     // attempted work around for #1347
-    [self.webView.delegate release];
+    if (delegateRetained) {
+        [self.webView.delegate release];
+        delegateRetained = NO;
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
