@@ -153,54 +153,80 @@
 		isPrivate = YES;
 	else if ([status isEqualToString:@"pending"])
 		isPending = YES;
-	
-	if (edited) {
-		[webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
-	} else {
-		
-		NSString *link = postDetailViewController.apost.permaLink;
-		
-        if (postDetailViewController.apost.blog.reachable == NO ) {
-			[webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
-		} else if (link == nil ) {
-			[webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
-		} else {
-				
-
-			// checks if this a scheduled post
-			
-			/*
-			 Forced the preview to use the login form. Otherwise the preview of pvt blog doesn't work.
-			 We can switch back to the normal call when we can access the blogOptions within the app.
-			 */
-			
-//			NSDate *currentGMTDate = [DateUtils currentGMTDate];
-			NSDate *postGMTDate = postDetailViewController.apost.date_created_gmt;
-			NSDate *laterDate = postDetailViewController.apost.date_created_gmt;//[currentGMTDate laterDate:postGMTDate];
-			
-			if(isDraft || isPending || isPrivate || isPrivateBlog || (laterDate == postGMTDate)) {
-				
-				NSString *wpLoginURL = [postDetailViewController.apost.blog loginURL];
-				NSURL *url = [NSURL URLWithString:wpLoginURL]; 
-				NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
-				[req setHTTPMethod:@"POST"];
-				[req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-				NSString *paramDataString = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@", 
-											 @"log", postDetailViewController.apost.blog.username,
-											 @"pwd", [[postDetailViewController.apost.blog fetchPassword] stringByUrlEncoding],
-											 @"redirect_to", link];
-			
-				NSData *paramData = [paramDataString dataUsingEncoding:NSUTF8StringEncoding]; 
-				[req setHTTPBody: paramData];
-                [req setValue:[NSString stringWithFormat:@"%d", [paramData length]] forHTTPHeaderField:@"Content-Length"];
-                [req addValue:@"*/*" forHTTPHeaderField:@"Accept"];
-				[webView loadRequest:req];
-
-			} else {
-				[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:link]]];
-			}
-		}
-	}
+    
+    WPDEMO_ONLY(^{
+        /*   NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask ,YES );
+         NSString *documentsDirectory = [paths objectAtIndex:0];
+         documentsDirectory = [documentsDirectory stringByReplacingOccurrencesOfString:@"/" withString:@"//"];
+         documentsDirectory = [documentsDirectory stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+         NSURL *imagesPath = [NSURL URLWithString:
+         [NSString stringWithFormat:@"file:/%@//",documentsDirectory]
+         ];
+         */
+        
+         NSString *link = postDetailViewController.apost.permaLink;
+        if ( ! link || edited ) {
+            [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+        } else {
+            NSDate *postGMTDate = postDetailViewController.apost.date_created_gmt;
+            NSDate *laterDate = postDetailViewController.apost.date_created_gmt;//[currentGMTDate laterDate:postGMTDate];
+            if(isDraft || isPending || isPrivate || isPrivateBlog || (laterDate == postGMTDate)) {
+                 [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+            } else {
+                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:link]]];
+            }
+        }
+        
+    }, ^{
+        
+        if (edited) {
+            [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+        } else {
+            
+            NSString *link = postDetailViewController.apost.permaLink;
+            
+            if (postDetailViewController.apost.blog.reachable == NO ) {
+                [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+            } else if (link == nil ) {
+                [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+            } else {
+                
+                
+                // checks if this a scheduled post
+                
+                /*
+                 Forced the preview to use the login form. Otherwise the preview of pvt blog doesn't work.
+                 We can switch back to the normal call when we can access the blogOptions within the app.
+                 */
+                
+                //			NSDate *currentGMTDate = [DateUtils currentGMTDate];
+                NSDate *postGMTDate = postDetailViewController.apost.date_created_gmt;
+                NSDate *laterDate = postDetailViewController.apost.date_created_gmt;//[currentGMTDate laterDate:postGMTDate];
+                
+                if(isDraft || isPending || isPrivate || isPrivateBlog || (laterDate == postGMTDate)) {
+                    
+                    NSString *wpLoginURL = [postDetailViewController.apost.blog loginURL];
+                    NSURL *url = [NSURL URLWithString:wpLoginURL];
+                    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+                    [req setHTTPMethod:@"POST"];
+                    [req addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+                    NSString *paramDataString = [NSString stringWithFormat:@"%@=%@&%@=%@&%@=%@",
+                                                 @"log", postDetailViewController.apost.blog.username,
+                                                 @"pwd", [[postDetailViewController.apost.blog fetchPassword] stringByUrlEncoding],
+                                                 @"redirect_to", link];
+                    
+                    NSData *paramData = [paramDataString dataUsingEncoding:NSUTF8StringEncoding];
+                    [req setHTTPBody: paramData];
+                    [req setValue:[NSString stringWithFormat:@"%d", [paramData length]] forHTTPHeaderField:@"Content-Length"];
+                    [req addValue:@"*/*" forHTTPHeaderField:@"Accept"];
+                    [webView loadRequest:req];
+                    
+                } else {
+                    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:link]]];
+                }
+            }
+        }
+    });
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {

@@ -126,7 +126,7 @@
     self.progress = 0.0f;
     WPDEMO_ONLY(^{
         self.remoteStatus = MediaRemoteStatusProcessing;
-       
+        
         double delayInSeconds = 0.8;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -144,7 +144,7 @@
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             self.progress = (float)66 / (float)100;
         });
-
+        
         delayInSeconds = 3.2;
         popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -155,6 +155,13 @@
         popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             self.remoteURL = self.localURL;
+            
+            //Fix the URL location : http://stackoverflow.com/questions/1926117/iphone-dev-uiwebview-baseurl-to-resources-in-documents-folder-not-app-bundle
+            NSString *imagePath = self.localURL;
+            imagePath = [imagePath stringByReplacingOccurrencesOfString:@"/" withString:@"//"];
+            imagePath = [imagePath stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+            NSURL *test = [NSURL URLWithString: [NSString stringWithFormat:@"file:/%@//",imagePath]];
+            self.remoteURL = [test absoluteString];
             NSNumber *tmpID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
             self.mediaID = tmpID;
             self.remoteStatus = MediaRemoteStatusSync;
