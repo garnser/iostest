@@ -425,22 +425,28 @@
 
 
 - (void)restorePreservedSelection {
-    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kSelectedSidebarIndexDictionary"];
-    NSIndexPath *preservedIndexPath = [NSIndexPath indexPathForRow:[[dict objectForKey:@"row"] integerValue] inSection:[[dict objectForKey:@"section"] integerValue]];
     
-    if (preservedIndexPath.section > 0 && ((preservedIndexPath.section - 1) < [self.resultsController.fetchedObjects count] )) {
-        if ([self.sectionInfoArray count] > (preservedIndexPath.section - 1)) {
-            SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:(preservedIndexPath.section -1)];
-            if (!sectionInfo.open) {
-                [sectionInfo.headerView toggleOpenWithUserAction:YES];
-            }
-            
-            [self processRowSelectionAtIndexPath:preservedIndexPath closingSidebar:NO];
-            [self.tableView selectRowAtIndexPath:preservedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-        }
-    } else {
+    WPDEMO_ONLY(^{
         [self selectFirstAvailableItem];
-    }
+    }, ^{
+        
+        NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kSelectedSidebarIndexDictionary"];
+        NSIndexPath *preservedIndexPath = [NSIndexPath indexPathForRow:[[dict objectForKey:@"row"] integerValue] inSection:[[dict objectForKey:@"section"] integerValue]];
+        
+        if (preservedIndexPath.section > 0 && ((preservedIndexPath.section - 1) < [self.resultsController.fetchedObjects count] )) {
+            if ([self.sectionInfoArray count] > (preservedIndexPath.section - 1)) {
+                SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:(preservedIndexPath.section -1)];
+                if (!sectionInfo.open) {
+                    [sectionInfo.headerView toggleOpenWithUserAction:YES];
+                }
+                
+                [self processRowSelectionAtIndexPath:preservedIndexPath closingSidebar:NO];
+                [self.tableView selectRowAtIndexPath:preservedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
+        } else {
+            [self selectFirstAvailableItem];
+        }
+    });
 }
 
 #pragma mark - Quick Photo Methods
@@ -863,10 +869,13 @@
     });
     
     
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:indexPath.row], @"row", [NSNumber numberWithInteger:indexPath.section], @"section", nil];
-    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"kSelectedSidebarIndexDictionary"];
-    [NSUserDefaults resetStandardUserDefaults];
+    WPDEMO_ONLY(^{
+        // Don't remember where we left off for the demo. 
+    }, ^{
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:indexPath.row], @"row", [NSNumber numberWithInteger:indexPath.section], @"section", nil];
+        [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"kSelectedSidebarIndexDictionary"];
+        [NSUserDefaults resetStandardUserDefaults];
+    });
     
     UIViewController *detailViewController = nil;  
     if (indexPath.section == 0) { //Reader
