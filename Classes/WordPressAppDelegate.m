@@ -261,11 +261,12 @@ static WordPressAppDelegate *wordPressApp = NULL;
     // another notification message came from WPWebViewController
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNotificationErrorAlert:) name:@"OpenWebPageFailed" object:nil];
 
-    
-	// Enable the Crash Reporter
-    NSError *error;
-	if (![crashReporter enableCrashReporterAndReturnError: &error])
-		NSLog(@"Warning: Could not enable crash reporter: %@", error);
+    WPDEMO_ONLY(^{}, ^{
+        // Enable the Crash Reporter
+        NSError *error;
+        if (![crashReporter enableCrashReporterAndReturnError: &error])
+            NSLog(@"Warning: Could not enable crash reporter: %@", error);
+    });
 	
 	[window makeKeyAndVisible];
 
@@ -386,11 +387,10 @@ static WordPressAppDelegate *wordPressApp = NULL;
         exit(-1);
     }
     
-    persistentStoreCoordinator_ = nil;
-    
     // The Demo app clears its DB every time it exits
     NSString *storePath = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:@"WordPress.sqlite"];
     [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
+    exit(0);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -408,7 +408,6 @@ static WordPressAppDelegate *wordPressApp = NULL;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationDidBecomeActive" object:nil];
     
-    [self persistentStoreCoordinator];
     // Clear notifications badge and update server
     // TODO: read/unread management when there's an API for it
     [self setAppBadge];
