@@ -134,7 +134,7 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
                                       withExtension:@"html"
                                        subdirectory:@"Demo/Reader"];
         [self.webView loadRequest:[NSURLRequest requestWithURL:localReader]];
-        self.detailViewController.url = [bundle URLForResource:@"detail" withExtension:@"html" subdirectory:@"Demo/Reader"];
+
   }, nil);
     
     WPDEMO_RETURN();
@@ -409,6 +409,8 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 
 - (void)refreshWebView {
     
+    WPDEMO_RETURN();
+    
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
         
     
@@ -475,6 +477,9 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
     [FileLogger log:@"%@ %@: %@://%@%@", self, NSStringFromSelector(_cmd), [[request URL] scheme], [[request URL] host], [[request URL] path]];
     
     NSURL *requestedURL = [request URL];
+    
+    WPDEMO_RETURN([requestedURL.absoluteString rangeOfString:@"Demo/Reader"].location != NSNotFound);
+    
     NSString *requestedURLAbsoluteString = [requestedURL absoluteString];
     if ([requestedURLAbsoluteString isEqualToString:kMobileReaderFakeLoaderURL]) {
         // Local loader

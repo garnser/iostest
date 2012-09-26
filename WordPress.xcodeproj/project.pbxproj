@@ -441,6 +441,7 @@
 		CC24E5F51577E16B00A6D5B5 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC24E5F41577E16B00A6D5B5 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CC313AD115A4360800F7B7C6 /* friend_follow_service_icons.png in Resources */ = {isa = PBXBuildFile; fileRef = CC313ACF15A4360800F7B7C6 /* friend_follow_service_icons.png */; };
 		CC313AD215A4360800F7B7C6 /* friend_follow_service_icons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CC313AD015A4360800F7B7C6 /* friend_follow_service_icons@2x.png */; };
+		CC46507F1613738C00AE0AC3 /* Demo in Resources */ = {isa = PBXBuildFile; fileRef = CCE55114161211CF00240633 /* Demo */; };
 		CC6B3BE715A33E16005A4523 /* WPFriendFinderNudgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6B3BE615A33E16005A4523 /* WPFriendFinderNudgeView.m */; };
 		CC6B3BFD15A35F10005A4523 /* friend_finder_cancel_btn_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6B3BF915A35F10005A4523 /* friend_finder_cancel_btn_highlight.png */; };
 		CC6B3BFE15A35F10005A4523 /* friend_finder_cancel_btn_highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6B3BFA15A35F10005A4523 /* friend_finder_cancel_btn_highlight@2x.png */; };
@@ -3367,6 +3368,7 @@
 				5D8824F51612436400784D0A /* demo-stats in Resources */,
 				37144DC416130E5E0055FA45 /* WordPress.sqlite in Resources */,
 				377B21D916134C8500ED07C1 /* DemoSplashViewController.xib in Resources */,
+				CC46507F1613738C00AE0AC3 /* Demo in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
