@@ -110,7 +110,7 @@
                 if ( ! results || ( results && results.count == 0 )) {
                     self.postID = tmpID;
                 }
-                self.remoteStatus = AbstractPostRemoteStatusSync;
+                self.remoteStatus = AbstractPostRemoteStatusPushing;
                 self.date_created_gmt = [DateUtils localDateToGMTDate:[NSDate date]];
             }
         }
@@ -118,6 +118,7 @@
         double delayInSeconds = 2.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.remoteStatus = AbstractPostRemoteStatusSync;
             if (success) success();
         });
     }, ^{
