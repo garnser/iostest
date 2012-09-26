@@ -8,6 +8,7 @@
 
 #import "Page.h"
 #import "NSMutableDictionary+Helpers.h"
+#import "WPDemo.h"
 
 @interface AbstractPost (WordPressApi)
 - (NSDictionary *)XMLRPCDictionary;
@@ -100,13 +101,34 @@
     if ([self.password isEmpty])
         self.password = nil;
 
-    [self save];
+    WPDEMO_ONLY(^{
+        if ( [self.postID intValue] == -1 ) {
+            //generate a random commentID
+            while ( [self.postID intValue] == -1 ) {
+                NSNumber *tmpID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
+                NSSet *results = [self.blog.posts filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"postID == %@", tmpID]];
+                if ( ! results || ( results && results.count == 0 )) {
+                    self.postID = tmpID;
+                }
+                self.remoteStatus = AbstractPostRemoteStatusSync;
+                self.date_created_gmt = [DateUtils localDateToGMTDate:[NSDate date]];
+            }
+        }
+        [self save];
+        double delayInSeconds = 2.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            if (success) success();
+        });
+    }, ^{
+        [self save];
 
-    if ([self hasRemote]) {
-        [self editPostWithSuccess:success failure:failure];
-    } else {
-        [self postPostWithSuccess:success failure:failure];
-    }
+        if ([self hasRemote]) {
+            [self editPostWithSuccess:success failure:failure];
+        } else {
+            [self postPostWithSuccess:success failure:failure];
+        }
+    });
 }
 
 @end
