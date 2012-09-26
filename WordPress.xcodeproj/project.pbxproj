@@ -122,6 +122,8 @@
 		30FB8D70140D9F49003BBEC5 /* toggleButtonExtended.png in Resources */ = {isa = PBXBuildFile; fileRef = 30FB8D6E140D9F49003BBEC5 /* toggleButtonExtended.png */; };
 		3704ACFC13128C9800120911 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3704ACFA13128C9800120911 /* Default.png */; };
 		3704ACFD13128C9800120911 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3704ACFB13128C9800120911 /* Default@2x.png */; };
+		37144DC416130E5E0055FA45 /* WordPress.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 37144DC316130E5E0055FA45 /* WordPress.sqlite */; };
+		37144DC516130E5E0055FA45 /* WordPress.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 37144DC316130E5E0055FA45 /* WordPress.sqlite */; };
 		371C162A15A3A3F800BC653C /* navbar_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 371C161E15A3A3F800BC653C /* navbar_bg.png */; };
 		371C162B15A3A3F800BC653C /* navbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 371C161F15A3A3F800BC653C /* navbar_bg@2x.png */; };
 		371C162D15A3A3F800BC653C /* navbar_button_bg_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 371C162115A3A3F800BC653C /* navbar_button_bg_active@2x.png */; };
@@ -180,8 +182,6 @@
 		374F18CD15A5897500524ED0 /* SidebarToolbarButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 374F18AB15A5897500524ED0 /* SidebarToolbarButton@2x.png */; };
 		375D090D133B94C3000CC9CD /* BlogsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 375D090C133B94C3000CC9CD /* BlogsTableViewCell.m */; };
 		375D7EE21355E9B6001C7371 /* paperclip.png in Resources */ = {isa = PBXBuildFile; fileRef = 375D7EE11355E9B6001C7371 /* paperclip.png */; };
-		375EC3D91611B2CA009AE290 /* WordPress.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 375EC3D81611B2CA009AE290 /* WordPress.sqlite */; };
-		375EC3DA1611B2CA009AE290 /* WordPress.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 375EC3D81611B2CA009AE290 /* WordPress.sqlite */; };
 		3768BE87130404FF00E7C9A9 /* BetaUIWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768BE86130404FF00E7C9A9 /* BetaUIWindow.m */; };
 		3768BEF113041E7900E7C9A9 /* BetaFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768BEEF13041E7800E7C9A9 /* BetaFeedbackViewController.m */; };
 		3768BEF213041E7900E7C9A9 /* BetaFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3768BEF013041E7900E7C9A9 /* BetaFeedbackViewController.xib */; };
@@ -767,6 +767,7 @@
 		30FB8D6E140D9F49003BBEC5 /* toggleButtonExtended.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toggleButtonExtended.png; sourceTree = "<group>"; };
 		3704ACFA13128C9800120911 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3704ACFB13128C9800120911 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		37144DC316130E5E0055FA45 /* WordPress.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WordPress.sqlite; sourceTree = "<group>"; };
 		371C161E15A3A3F800BC653C /* navbar_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navbar_bg.png; sourceTree = "<group>"; };
 		371C161F15A3A3F800BC653C /* navbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_bg@2x.png"; sourceTree = "<group>"; };
 		371C162115A3A3F800BC653C /* navbar_button_bg_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_button_bg_active@2x.png"; sourceTree = "<group>"; };
@@ -827,7 +828,6 @@
 		375D090B133B94C3000CC9CD /* BlogsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlogsTableViewCell.h; sourceTree = "<group>"; };
 		375D090C133B94C3000CC9CD /* BlogsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlogsTableViewCell.m; sourceTree = "<group>"; };
 		375D7EE11355E9B6001C7371 /* paperclip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = paperclip.png; sourceTree = "<group>"; };
-		375EC3D81611B2CA009AE290 /* WordPress.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WordPress.sqlite; sourceTree = "<group>"; };
 		3768BE85130404FF00E7C9A9 /* BetaUIWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetaUIWindow.h; sourceTree = "<group>"; };
 		3768BE86130404FF00E7C9A9 /* BetaUIWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BetaUIWindow.m; sourceTree = "<group>"; };
 		3768BEEE13041E7800E7C9A9 /* BetaFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetaFeedbackViewController.h; sourceTree = "<group>"; };
@@ -1793,7 +1793,7 @@
 		375EC3D61611B2A3009AE290 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				375EC3D81611B2CA009AE290 /* WordPress.sqlite */,
+				37144DC316130E5E0055FA45 /* WordPress.sqlite */,
 			);
 			name = Demo;
 			sourceTree = "<group>";
@@ -3347,9 +3347,9 @@
 				E131D20C15D5263A009DFB23 /* README.md in Resources */,
 				5D2B629115EBF7FF0053361D /* JetpackSettingsViewController.xib in Resources */,
 				A2A14DED1603AA6D0005D358 /* Default-568h@2x.png in Resources */,
-				375EC3D91611B2CA009AE290 /* WordPress.sqlite in Resources */,
 				5D4C9A27161232C7007FB3AA /* demo-stats.html in Resources */,
 				5D8824F51612436400784D0A /* demo-stats in Resources */,
+				37144DC416130E5E0055FA45 /* WordPress.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3358,7 +3358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E16AB93414D978240047A2E5 /* InfoPlist.strings in Resources */,
-				375EC3DA1611B2CA009AE290 /* WordPress.sqlite in Resources */,
+				37144DC516130E5E0055FA45 /* WordPress.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
