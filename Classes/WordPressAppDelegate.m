@@ -15,6 +15,7 @@
 #import "AFNetworkActivityIndicatorManager.h"
 #import "UIColor+Helpers.h"
 #import "WPDemo.h"
+#import "DemoSplashViewController.h"
 
 @interface WordPressAppDelegate (Private)
 - (void)setAppBadge;
@@ -268,8 +269,21 @@ static WordPressAppDelegate *wordPressApp = NULL;
             NSLog(@"Warning: Could not enable crash reporter: %@", error);
     });
 	
-	[window makeKeyAndVisible];
-
+    WPDEMO_ONLY(^{
+        DemoSplashViewController *demoSplashViewController = [[[DemoSplashViewController alloc] initWithNibName:@"DemoSplashViewController" bundle:nil] autorelease];
+        demoSplashViewController.view.frame = window.frame;
+        [[panelNavigationController view] addSubview:demoSplashViewController.view];
+        [[panelNavigationController view] bringSubviewToFront:demoSplashViewController.view];
+        
+        [window makeKeyAndVisible];
+        
+        [UIView animateWithDuration:0.5f delay:4.0f options:UIViewAnimationOptionTransitionNone
+                         animations:^{demoSplashViewController.view.alpha = 0.0;}
+                         completion:^(BOOL finished){ [demoSplashViewController.view removeFromSuperview]; }];
+    }, ^{
+        [window makeKeyAndVisible];
+    });
+    
 	[self registerForPushNotifications];
     
     //Information related to the reason for its launching, which can include things other than notifications.

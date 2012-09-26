@@ -199,6 +199,8 @@
 		377636E615AF620A00C1C5C6 /* panel_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 377636E415AF620A00C1C5C6 /* panel_icon@2x.png */; };
 		377636F215B0360C00C1C5C6 /* tabPointer_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 377636F015B0360C00C1C5C6 /* tabPointer_black.png */; };
 		377636F315B0360C00C1C5C6 /* tabPointer_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 377636F115B0360C00C1C5C6 /* tabPointer_black@2x.png */; };
+		377B21D816134C8500ED07C1 /* DemoSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377B21D616134C8500ED07C1 /* DemoSplashViewController.m */; };
+		377B21D916134C8500ED07C1 /* DemoSplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377B21D716134C8500ED07C1 /* DemoSplashViewController.xib */; };
 		37B159F415AC7CEB00333C91 /* sidebar_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 37B159F215AC7CEB00333C91 /* sidebar_cell_bg@2x.png */; };
 		37B159F515AC7CEB00333C91 /* sidebar_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 37B159F315AC7CEB00333C91 /* sidebar_cell_bg.png */; };
 		37E3024015B6B15A00183F34 /* toolbar_delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 37E3023E15B6B15A00183F34 /* toolbar_delete.png */; };
@@ -847,6 +849,9 @@
 		377636E415AF620A00C1C5C6 /* panel_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "panel_icon@2x.png"; sourceTree = "<group>"; };
 		377636F015B0360C00C1C5C6 /* tabPointer_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabPointer_black.png; sourceTree = "<group>"; };
 		377636F115B0360C00C1C5C6 /* tabPointer_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabPointer_black@2x.png"; sourceTree = "<group>"; };
+		377B21D516134C8500ED07C1 /* DemoSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoSplashViewController.h; sourceTree = "<group>"; };
+		377B21D616134C8500ED07C1 /* DemoSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoSplashViewController.m; sourceTree = "<group>"; };
+		377B21D716134C8500ED07C1 /* DemoSplashViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoSplashViewController.xib; sourceTree = "<group>"; };
 		37B159F215AC7CEB00333C91 /* sidebar_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sidebar_cell_bg@2x.png"; sourceTree = "<group>"; };
 		37B159F315AC7CEB00333C91 /* sidebar_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebar_cell_bg.png; sourceTree = "<group>"; };
 		37E3023E15B6B15A00183F34 /* toolbar_delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toolbar_delete.png; sourceTree = "<group>"; };
@@ -1689,6 +1694,16 @@
 			name = About;
 			sourceTree = "<group>";
 		};
+		37144DD616133C060055FA45 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				377B21D516134C8500ED07C1 /* DemoSplashViewController.h */,
+				377B21D616134C8500ED07C1 /* DemoSplashViewController.m */,
+				377B21D716134C8500ED07C1 /* DemoSplashViewController.xib */,
+			);
+			name = Demo;
+			sourceTree = "<group>";
+		};
 		371C161C15A3A3AD00BC653C /* Navigation Bar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2176,6 +2191,7 @@
 		AC34397A0E11435A00E5D79B /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				37144DD616133C060055FA45 /* Demo */,
 				E15D46C7156A506A00227392 /* Panels */,
 				AC34397B0E11443300E5D79B /* Blog */,
 				C533CF320E6D3AB3000C3DE8 /* Comments */,
@@ -3350,6 +3366,7 @@
 				5D4C9A27161232C7007FB3AA /* demo-stats.html in Resources */,
 				5D8824F51612436400784D0A /* demo-stats in Resources */,
 				37144DC416130E5E0055FA45 /* WordPress.sqlite in Resources */,
+				377B21D916134C8500ED07C1 /* DemoSplashViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3559,6 +3576,7 @@
 				5D2B629015EBF7FF0053361D /* JetpackSettingsViewController.m in Sources */,
 				5D48D040160A679700FC4C63 /* UINavigationController+Rotation.m in Sources */,
 				E1C30CCE1611D06A004E6230 /* WPDemo.m in Sources */,
+				377B21D816134C8500ED07C1 /* DemoSplashViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
