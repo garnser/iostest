@@ -7,14 +7,13 @@
 //
 
 void WPDEMO_ONLY(void (^demoBlock)(void), void (^regularBlock)(void)) {
-    if (getenv("WPDEMO")) {
+#ifdef WPDEMO
         demoBlock();
-    } else {
-        if (regularBlock) {
+#else
+    if (regularBlock) {
             regularBlock();
         }
-//        regularBlock();
-    }
+#endif
 }
 
 void WPDEMO_FEATURE_UNAVAILABLE(void (^regularBlock)(void)) {

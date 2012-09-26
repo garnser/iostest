@@ -679,7 +679,6 @@ Vendor/xmlrpc/XMLRPCResponse.m -text
 /WordPress[!!-~]copy-Info.plist -text
 /WordPress.sqlite -text
 WordPress.xcodeproj/project.pbxproj -text
-WordPress.xcodeproj/xcshareddata/xcschemes/WordPress[!!-~]demo.xcscheme -text
 WordPressApi/AFAuthenticationAlertView.h -text
 WordPressApi/AFAuthenticationAlertView.m -text
 WordPressApi/AFXMLRPCClient.h -text

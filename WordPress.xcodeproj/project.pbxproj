@@ -447,7 +447,6 @@
 		CCB3A04014C8E12700D43C3F /* WPReaderTopicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB3A03F14C8E12700D43C3F /* WPReaderTopicsViewController.m */; };
 		CCDCBC201590BF2A0040B3B1 /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CCDCBC131590BF2A0040B3B1 /* FBDialog.bundle */; };
 		CCDCBC211590BF2A0040B3B1 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCBC191590BF2A0040B3B1 /* libfacebook_ios_sdk.a */; };
-		CCE55115161211CF00240633 /* Demo in Resources */ = {isa = PBXBuildFile; fileRef = CCE55114161211CF00240633 /* Demo */; };
 		CCEF153114C9EA050001176D /* WPWebAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCEF153014C9EA050001176D /* WPWebAppViewController.m */; };
 		CEBD3EAB0FF1BA3B00C1396E /* Blog.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBD3EAA0FF1BA3B00C1396E /* Blog.m */; };
 		CEFC8B5910057D0A0052604A /* WPProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFC8B5810057D0A0052604A /* WPProgressHUD.m */; };
@@ -3641,6 +3640,7 @@
 					TOUCHXMLUSETIDY,
 					"ASIHTTPREQUEST_DEBUG=1",
 					DEBUGMODE,
+					WPDEMO,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
@@ -3678,7 +3678,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = WordPress_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = TOUCHXMLUSETIDY;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					TOUCHXMLUSETIDY,
+					WPDEMO,
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -3738,7 +3741,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = WordPress_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = TOUCHXMLUSETIDY;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					TOUCHXMLUSETIDY,
+					WPDEMO,
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -3804,6 +3810,7 @@
 					TOUCHXMLUSETIDY,
 					"ASIHTTPREQUEST_DEBUG=1",
 					DEBUGMODE,
+					WPDEMO,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
