@@ -10,6 +10,7 @@
 #import "WPTableViewControllerSubclass.h"
 #import "EGORefreshTableHeaderView.h" 
 #import "WordPressAppDelegate.h"
+#import "WPDemo.h"
 
 NSTimeInterval const WPTableViewControllerRefreshTimeout = 300; // 5 minutes
 
@@ -99,6 +100,7 @@ NSTimeInterval const WPTableViewControllerRefreshTimeout = 300; // 5 minutes
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    WPDEMO_RETURN();
     WordPressAppDelegate *appDelegate = [WordPressAppDelegate sharedWordPressApp];
     if( appDelegate.connectionAvailable == NO ) return; //do not start auto-synch if connection is down
     NSDate *lastSynced = [self lastSyncDate];
