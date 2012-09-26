@@ -10728,20 +10728,20 @@ ul.subsubsub .current {
 }
 #geoviews_tablecontainer {
 	float: left;
+    width: 100%;
 }
 #geoviews_mapcontainer {
 	float: right;
 	padding-right: 5px;
 }
 #geoviews table.statsDay {
-	width: 184px;
 	float: left;
 }
 #geoviews.sumdiv #geoviews_mapcontainer {
 	padding-right: 0px;
 }
 #geoviews.sumdiv #geoviews_tablecontainer {
-	width: 300px;
+
 }
 #geoviews.sumdiv table.statsDay {
 	width: 100% !important;
@@ -11485,9 +11485,11 @@ h3.loading .offset {
 	}
 	
 	#geoviews table.statsDay {
-		width: 274px !important;
+		width: 100% !important;
 	}
-	
+	#geoviews td.views, #geoviews th.views {
+        padding-right:15px;
+    }
 	.dates {
 		width:100%;
 		overflow-x:scroll;
