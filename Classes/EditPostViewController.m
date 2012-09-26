@@ -716,17 +716,19 @@ NSTimeInterval kAnimationDuration = 0.3f;
 
 - (IBAction)showAddNewCategoryView:(id)sender
 {
-    WPFLogMethod();
-    WPAddCategoryViewController *addCategoryViewController = [[WPAddCategoryViewController alloc] initWithNibName:@"WPAddCategoryViewController" bundle:nil];
-    addCategoryViewController.blog = self.post.blog;
-	if (IS_IPAD == YES) {
-        [segmentedTableViewController pushViewController:addCategoryViewController animated:YES];
- 	} else {
-		UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:addCategoryViewController];
-		[segmentedTableViewController presentModalViewController:nc animated:YES];
-		[nc release];
-	}
-    [addCategoryViewController release];
+    WPDEMO_FEATURE_UNAVAILABLE(^{
+        WPFLogMethod();
+        WPAddCategoryViewController *addCategoryViewController = [[WPAddCategoryViewController alloc] initWithNibName:@"WPAddCategoryViewController" bundle:nil];
+        addCategoryViewController.blog = self.post.blog;
+        if (IS_IPAD == YES) {
+            [segmentedTableViewController pushViewController:addCategoryViewController animated:YES];
+        } else {
+            UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:addCategoryViewController];
+            [segmentedTableViewController presentModalViewController:nc animated:YES];
+            [nc release];
+        }
+        [addCategoryViewController release];
+    });
 }
 
 - (void)endEditingAction:(id)sender {
