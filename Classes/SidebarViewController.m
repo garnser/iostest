@@ -427,7 +427,10 @@
 - (void)restorePreservedSelection {
     
     WPDEMO_ONLY(^{
-        [self selectFirstAvailableItem];
+        SectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:0];
+        if (!sectionInfo.open) {
+            [sectionInfo.headerView toggleOpenWithUserAction:YES];
+        }
     }, ^{
         
         NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kSelectedSidebarIndexDictionary"];
