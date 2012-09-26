@@ -8,6 +8,7 @@
 
 #import "AbstractPost.h"
 #import "NSMutableDictionary+Helpers.h"
+#import "WPDemo.h"
 
 @interface AbstractPost(ProtectedMethods)
 + (NSString *)titleForStatus:(NSString *)status;
@@ -52,6 +53,8 @@
 
 - (void)awakeFromFetch {
     [super awakeFromFetch];
+    
+    WPDEMO_RETURN();
     
     if (self.remoteStatus == AbstractPostRemoteStatusPushing) {
         // If we've just been fetched and our status is AbstractPostRemoteStatusPushing then something
