@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface DemoSplashViewController : UIViewController {
-    IBOutlet UILabel *demoMessageLabel;
 }
 
-@property (nonatomic, retain) IBOutlet UILabel *demoMessageLabel;
+@property (nonatomic, strong) IBOutlet UIView *labelView;
+@property (nonatomic, strong) IBOutlet UILabel *demoMessageLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *backgroundImage;
 
 @end
