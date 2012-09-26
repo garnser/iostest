@@ -79,7 +79,10 @@
     reply.post = self.post;
     reply.parentID = self.commentID;
     reply.status = @"approve";
-    
+    WPDEMO_ONLY(^{
+        reply.postTitle = self.postTitle;
+        reply.dateCreated = [DateUtils currentGMTDate];
+    }, nil);
     return reply;
 }
 
