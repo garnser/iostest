@@ -28,7 +28,6 @@
     [super dealloc];
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -42,27 +41,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    NSString *imgName = nil;
-    
-    if(IS_IPAD) {
-        if(UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-            imgName = @"Default-Portrait";
-        } else {
-            imgName = @"Default-Landscape";
-        }
-        
-    } else {
-        
-        CGSize size = self.view.frame.size;
-        if (size.width > 480.0 || size.height > 480.0) {
-            imgName = @"Default-568h";
-        } else {
-            imgName = @"Default";
-        }
-    }
-    
-    [self.backgroundImage setImage:[UIImage imageNamed:imgName]];
+    [self updateBackgroundImage:self.interfaceOrientation];
 }
 
 - (void)viewDidUnload
@@ -73,6 +52,13 @@
     self.labelView = nil;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self updateBackgroundImage:self.interfaceOrientation];
+}
+
+- (BOOL)shouldAutorotate {
+    return NO;    
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -89,5 +75,27 @@
     }
     return UIInterfaceOrientationMaskAll;
 }
+
+- (void)updateBackgroundImage:(UIInterfaceOrientation)toInterfaceOrientation {
+    NSString *imgName = nil;
+    
+    if(IS_IPAD) {
+        if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
+            imgName = @"Default-Portrait";
+        } else {
+            imgName = @"Default-Landscape";
+        }
+    } else {
+        
+        CGSize size = self.view.frame.size;
+        if (size.width > 480.0 || size.height > 480.0) {
+            imgName = @"Default-568h";
+        } else {
+            imgName = @"Default";
+        }
+    }
+    [self.backgroundImage setImage:[UIImage imageNamed:imgName]];
+}
+
 
 @end

@@ -15,4 +15,6 @@
 @property (nonatomic, strong) IBOutlet UILabel *demoMessageLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *backgroundImage;
 
+- (void)updateBackgroundImage:(UIInterfaceOrientation)toInterfaceOrientation;
+
 @end

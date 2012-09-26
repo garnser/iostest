@@ -272,6 +272,7 @@ static WordPressAppDelegate *wordPressApp = NULL;
     WPDEMO_ONLY(^{
         DemoSplashViewController *demoSplashViewController = [[[DemoSplashViewController alloc] initWithNibName:@"DemoSplashViewController" bundle:nil] autorelease];
         demoSplashViewController.view.frame = window.frame;
+        [panelNavigationController addChildViewController:demoSplashViewController];
         [[panelNavigationController view] addSubview:demoSplashViewController.view];
         [[panelNavigationController view] bringSubviewToFront:demoSplashViewController.view];
         
@@ -279,7 +280,10 @@ static WordPressAppDelegate *wordPressApp = NULL;
         
         [UIView animateWithDuration:0.5f delay:4.0f options:UIViewAnimationOptionTransitionNone
                          animations:^{demoSplashViewController.view.alpha = 0.0;}
-                         completion:^(BOOL finished){ [demoSplashViewController.view removeFromSuperview]; }];
+                         completion:^(BOOL finished){
+                             [demoSplashViewController.view removeFromSuperview];
+                             [demoSplashViewController removeFromParentViewController];
+                         }];
     }, ^{
         [window makeKeyAndVisible];
     });
