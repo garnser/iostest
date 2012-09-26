@@ -1,4 +1,4 @@
-#import "EditPostViewController.h"
+    #import "EditPostViewController.h"
 #import "WordPressAppDelegate.h"
 #import "WPSegmentedSelectionTableViewController.h"
 #import "CPopoverManager.h"
@@ -443,12 +443,10 @@ NSTimeInterval kAnimationDuration = 0.3f;
 }
 
 - (IBAction)switchToMedia {
-    WPDEMO_FEATURE_UNAVAILABLE(^{
-        if (currentView != postMediaViewController.view) {
-            [self switchToView:postMediaViewController.view];
-        }
-        self.navigationItem.title = NSLocalizedString(@"Media", @"Post Editor / Media screen title.");
-    });
+    if (currentView != postMediaViewController.view) {
+        [self switchToView:postMediaViewController.view];
+    }
+    self.navigationItem.title = NSLocalizedString(@"Media", @"Post Editor / Media screen title.");
 }
 
 - (IBAction)switchToPreview {
@@ -465,9 +463,7 @@ NSTimeInterval kAnimationDuration = 0.3f;
 }
 
 - (IBAction)addPhoto:(id)sender {
-    WPDEMO_FEATURE_UNAVAILABLE(^{
-        [postMediaViewController showPhotoPickerActionSheet:sender];
-    });
+    [postMediaViewController showPhotoPickerActionSheet:sender];
 }
 
 - (IBAction)showCategories:(id)sender {

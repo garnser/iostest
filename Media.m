@@ -9,6 +9,7 @@
 #import "Media.h"
 #import "UIImage+Resize.h"
 #import "NSString+Helpers.h"
+#import "WPDemo.h"
 
 @interface Media (PrivateMethods)
 - (void)xmlrpcUploadWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure ;
@@ -123,12 +124,59 @@
 - (void)uploadWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
     [self save];
     self.progress = 0.0f;
-    
-    if (!self.blog.isWPcom && [self.mediaType isEqualToString:@"video"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"video_api_preference"] intValue] == 1) {
-        [self atomPubUploadWithSuccess:success failure:failure];
-    } else {
-        [self xmlrpcUploadWithSuccess:success failure:failure];
-    }
+    WPDEMO_ONLY(^{
+        self.remoteStatus = MediaRemoteStatusProcessing;
+       
+        double delayInSeconds = 0.8;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.remoteStatus = MediaRemoteStatusPushing;
+        });
+        
+        delayInSeconds = 1.2;
+        popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.progress =  (float)33 / (float)100;
+        });
+        
+        delayInSeconds = 2.5;
+        popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.progress = (float)66 / (float)100;
+        });
+
+        delayInSeconds = 3.2;
+        popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.progress = (float)79 / (float)100;
+        });
+        
+        delayInSeconds = 4.0;
+        popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.remoteURL = self.localURL;
+            NSNumber *tmpID = [NSNumber numberWithInt: ( arc4random() % 99999999 )];
+            self.mediaID = tmpID;
+            self.remoteStatus = MediaRemoteStatusSync;
+            if (success) success();
+            
+            if([self.mediaType isEqualToString:@"video"]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:VideoUploadSuccessful
+                                                                    object:self];
+                
+            } else {
+                [[NSNotificationCenter defaultCenter] postNotificationName:ImageUploadSuccessful
+                                                                    object:self];
+                
+            }
+        });
+    }, ^{
+        if (!self.blog.isWPcom && [self.mediaType isEqualToString:@"video"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"video_api_preference"] intValue] == 1) {
+            [self atomPubUploadWithSuccess:success failure:failure];
+        } else {
+            [self xmlrpcUploadWithSuccess:success failure:failure];
+        }
+    });
 }
 
 - (void)xmlrpcUploadWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
