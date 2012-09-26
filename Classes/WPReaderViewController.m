@@ -372,6 +372,7 @@ NSString *const WPReaderViewControllerDisplayedFriendFinder = @"displayed friend
 }
 
 - (bool)canIHazCookie {
+    WPDEMO_RETURN(YES);
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:kMobileReaderURL]];
     for (NSHTTPCookie *cookie in cookies) {
         if ([cookie.name isEqualToString:@"wordpress_logged_in"]) {
