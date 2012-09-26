@@ -445,8 +445,8 @@ static WordPressAppDelegate *wordPressApp = NULL;
 #pragma mark Public Methods
 
 - (void)handleFeatureNotAvailable:(NSNotification *)notification {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-                                                        message:@"Feature not enabled for this demo"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Feature Not Enabled"
+                                                        message:@"Sorry. This feature is not enabled for this demo."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil, nil];
