@@ -477,6 +477,10 @@ static NSString *_lastAuthedName = nil;
 - (void)webViewDidFinishLoad:(WPWebView *)wpWebView {
     [FileLogger log:@"%@ %@", self, NSStringFromSelector(_cmd)];
    
+    WPDEMO_ONLY(^{
+        [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout = 'none';"];
+    }, nil);
+    
     // Override super so we do not change our title.
     self.title = @"Stats";
 }
