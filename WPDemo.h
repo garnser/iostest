@@ -15,6 +15,10 @@ void WPDEMO_ONLY(void (^demoBlock)(void), void (^regularBlock)(void));
 
 void WPDEMO_FEATURE_UNAVAILABLE(void (^regularBlock)(void));
 
-#define WPDEMO_RETURN(val) if (getenv("WPDEMO")) return val;
+#ifdef WPDEMO
+#define WPDEMO_RETURN(val) return val;
+#else
+#define WPDEMO_RETURN(val)
+#endif
 
 #endif
