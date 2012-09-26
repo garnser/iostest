@@ -478,23 +478,31 @@
 
 - (void)deletePostWithSuccess:(void (^)())success failure:(void (^)(NSError *error))failure {
     WPFLogMethod();
-    BOOL remote = [self hasRemote];
-    if (remote) {
-        NSArray *parameters = [NSArray arrayWithObjects:@"unused", self.postID, self.blog.username, [self.blog fetchPassword], nil];
-        [self.blog.api callMethod:@"metaWeblog.deletePost"
-                       parameters:parameters
-                          success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                              [[self managedObjectContext] deleteObject:self];
-                              if (success) success();
-                          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                              if (failure) failure(error);
-                          }];
-    }
-    [[self managedObjectContext] deleteObject:self];
-    [self save];
-    if (!remote && success) {
-        success();
-    }
+    WPDEMO_ONLY(^{
+        [[self managedObjectContext] deleteObject:self];
+        [self save];
+        if (success) {
+            success();
+        }
+    },^{
+        BOOL remote = [self hasRemote];
+        if (remote) {
+            NSArray *parameters = [NSArray arrayWithObjects:@"unused", self.postID, self.blog.username, [self.blog fetchPassword], nil];
+            [self.blog.api callMethod:@"metaWeblog.deletePost"
+                           parameters:parameters
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  [[self managedObjectContext] deleteObject:self];
+                                  if (success) success();
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  if (failure) failure(error);
+                              }];
+        }
+        [[self managedObjectContext] deleteObject:self];
+        [self save];
+        if (!remote && success) {
+            success();
+        }
+    });
 }
 
 @end
