@@ -877,48 +877,58 @@ static WordPressAppDelegate *wordPressApp = NULL;
 }
 
 - (void)checkWPcomAuthentication {
-	NSString *authURL = @"https://wordpress.com/xmlrpc.php";
-	
-    NSError *error = nil;
-	if([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"] != nil) {
-        NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"];
-        if ([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_password_preference"] != nil) {
-            // Migrate password to keychain
-            [SFHFKeychainUtils storeUsername:username
-                                 andPassword:[[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_password_preference"]
-                              forServiceName:@"WordPress.com"
-                              updateExisting:YES error:&error];
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"wpcom_password_preference"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    WPDEMO_ONLY(^{
+        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"wpcom_authenticated_flag"];
+    }, ^{
+        
+        
+        
+        
+        NSString *authURL = @"https://wordpress.com/xmlrpc.php";
+        
+        NSError *error = nil;
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"] != nil) {
+            NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_username_preference"];
+            if ([[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_password_preference"] != nil) {
+                // Migrate password to keychain
+                [SFHFKeychainUtils storeUsername:username
+                                     andPassword:[[NSUserDefaults standardUserDefaults] objectForKey:@"wpcom_password_preference"]
+                                  forServiceName:@"WordPress.com"
+                                  updateExisting:YES error:&error];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"wpcom_password_preference"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            NSString *password = [SFHFKeychainUtils getPasswordForUsername:username
+                                                            andServiceName:@"WordPress.com"
+                                                                     error:&error];
+            if (password != nil) {
+                AFXMLRPCClient *client = [AFXMLRPCClient clientWithXMLRPCEndpoint:[NSURL URLWithString:authURL]];
+                [client callMethod:@"wp.getUsersBlogs"
+                        parameters:[NSArray arrayWithObjects:username, password, nil]
+                           success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                               isWPcomAuthenticated = YES;
+                               WPFLog(@"Logged in to WordPress.com as %@", username);
+                           } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                               if ([error.domain isEqualToString:@"XMLRPC"] && error.code == 403) {
+                                   isWPcomAuthenticated = NO;
+                               }
+                               WPFLog(@"Error authenticating %@ with WordPress.com: %@", username, [error description]);
+                           }];
+            } else {
+                isWPcomAuthenticated = NO;
+            }
         }
-        NSString *password = [SFHFKeychainUtils getPasswordForUsername:username
-                                                        andServiceName:@"WordPress.com"
-                                                                 error:&error];
-        if (password != nil) {
-            AFXMLRPCClient *client = [AFXMLRPCClient clientWithXMLRPCEndpoint:[NSURL URLWithString:authURL]];
-            [client callMethod:@"wp.getUsersBlogs"
-                    parameters:[NSArray arrayWithObjects:username, password, nil]
-                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                           isWPcomAuthenticated = YES;
-                           WPFLog(@"Logged in to WordPress.com as %@", username);
-                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                           if ([error.domain isEqualToString:@"XMLRPC"] && error.code == 403) {
-                               isWPcomAuthenticated = NO;
-                           }
-                           WPFLog(@"Error authenticating %@ with WordPress.com: %@", username, [error description]);
-                       }];            
-        } else {
+        else {
             isWPcomAuthenticated = NO;
         }
-	}
-	else {
-		isWPcomAuthenticated = NO;
-	}
-	
-	if(isWPcomAuthenticated)
-		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"wpcom_authenticated_flag"];
-	else
-		[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"wpcom_authenticated_flag"];
+        
+        if(isWPcomAuthenticated)
+            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"wpcom_authenticated_flag"];
+        else
+            [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"wpcom_authenticated_flag"];
+        
+    });
 }
 
 
