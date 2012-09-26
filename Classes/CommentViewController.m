@@ -438,6 +438,7 @@
 }
 
 - (BOOL)isConnectedToHost {
+    WPDEMO_RETURN(YES);
     WordPressAppDelegate  *appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
     if (appDelegate.currentBlogAvailable == NO ) {
         UIAlertView *connectionFailAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No connection to host.", @"")

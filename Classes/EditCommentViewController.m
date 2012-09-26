@@ -10,6 +10,8 @@
 #import "WPProgressHUD.h"
 #import "CommentViewController.h"
 
+#import "WPDemo.h"
+
 @interface EditCommentViewController (Private)
 
 - (BOOL)isConnectedToHost;
@@ -262,7 +264,8 @@
 #pragma mark Comment Handling Methods
 
 - (BOOL)isConnectedToHost {
-  WordPressAppDelegate  *appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
+    WPDEMO_RETURN(YES);
+    WordPressAppDelegate  *appDelegate = (WordPressAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if ( appDelegate.currentBlogAvailable == NO ) {
         UIAlertView *connectionFailAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No connection to host.", @"")

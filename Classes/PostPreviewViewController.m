@@ -163,15 +163,15 @@
          [NSString stringWithFormat:@"file:/%@//",documentsDirectory]
          ];
          */
-        
-         NSString *link = postDetailViewController.apost.permaLink;
-        if ( ! link || edited ) {
+        WordPressAppDelegate *appDelegate = [WordPressAppDelegate sharedWordPressApp];
+        NSString *link = postDetailViewController.apost.permaLink;
+        if ( ! link || edited || ( appDelegate.connectionAvailable == NO ) || ( appDelegate.wpcomAvailable == NO ) || ( appDelegate.currentBlogAvailable == NO  ) ) {
             [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
         } else {
             NSDate *postGMTDate = postDetailViewController.apost.date_created_gmt;
             NSDate *laterDate = postDetailViewController.apost.date_created_gmt;//[currentGMTDate laterDate:postGMTDate];
             if(isDraft || isPending || isPrivate || isPrivateBlog || (laterDate == postGMTDate)) {
-                 [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
+                [webView loadHTMLString:[self buildSimplePreview] baseURL:nil];
             } else {
                 [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:link]]];
             }
